@@ -43,22 +43,30 @@ Sigue **`SUPABASE_SETUP.md`** paso a paso — crea el proyecto, ejecuta el SQL d
 
 ### 2. Publicar `index.html`
 
-Cualquiera de estas opciones sirve, ya que es un archivo estático:
+Este proyecto se despliega así: el código vive en **GitHub**, y **Vercel** es quien lo publica y le da la URL pública.
 
-**Opción A — GitHub Pages (gratis):**
-1. Sube este repositorio a GitHub.
-2. Ve a **Settings → Pages** → **Source: Deploy from a branch** → elige `main` y la carpeta `/root`.
-3. En unos minutos tu app estará en `https://tu-usuario.github.io/tu-repo/`.
+**Opción A — Vercel (la que usa este proyecto):**
+1. Sube este repositorio a GitHub (ya hecho si estás leyendo esto desde ahí).
+2. En [vercel.com](https://vercel.com) → **Add New → Project** → importa este repositorio de GitHub.
+3. Como es HTML plano, en **Framework Preset** elige **Other** (no Next.js ni ningún framework) para que Vercel sirva `index.html` tal cual, sin intentar compilarlo.
+4. **Deploy**. Vercel te da una URL como `https://tu-proyecto.vercel.app` — esa es la que debes poner como **Site URL** en Supabase (ver `SUPABASE_SETUP.md`, Paso 4).
+5. Cada vez que hagas `git push` a la rama principal, Vercel vuelve a desplegar automáticamente con los cambios.
 
-**Opción B — abrirlo localmente:**
-Simplemente haz doble clic en `index.html`. Funciona igual, aunque para producción se recomienda publicarlo con HTTPS (requisito de algunas APIs del navegador que usa la app).
+**Opción B — GitHub Pages (alternativa gratuita, sin Vercel):**
+1. Ve a **Settings → Pages** en tu repositorio → **Source: Deploy from a branch** → elige `main` y la carpeta `/root`.
+2. En unos minutos tu app estará en `https://tu-usuario.github.io/tu-repo/`. Usa esa URL como Site URL en Supabase en vez de la de Vercel.
+
+**Opción C — abrirlo localmente (solo para pruebas rápidas):**
+Doble clic en `index.html`. El login con Supabase puede fallar en `file://` por restricciones del navegador — usa el **modo demo** (botón en la pantalla de inicio) para probar la interfaz sin depender de la conexión.
 
 ### 3. Primer uso
 
-1. Abre la URL publicada.
+1. Abre tu URL de Vercel (o la que hayas publicado).
 2. Crea una cuenta (correo + contraseña).
 3. Completa el perfil de tu empresa.
 4. Registra tu primer proceso crítico y corre el diagnóstico.
+
+> ¿Solo quieres ver cómo funciona la plataforma sin conectar nada todavía? Usa el botón **"Probar sin conexión (modo demo)"** en la pantalla de inicio — guarda los datos solo en tu navegador, para validar la interfaz mientras se resuelve la conexión real.
 
 ---
 

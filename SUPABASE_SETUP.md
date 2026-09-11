@@ -94,11 +94,17 @@ La app ya sube cada imagen con la ruta `TU_USER_ID/nombre-archivo.png` — por e
 
 ### Paso 4. Activar el inicio de sesión por correo y contraseña
 
-Ve a **Authentication → Providers** → confirma que **Email** está habilitado (lo está por defecto).
+Ve a **Authentication → Providers** → confirma que **Email** está habilitado (lo está por defecto), y que dentro de esa misma fila el interruptor **"Allow new users to sign up"** también esté activado (es una opción distinta a "Confirm email", y si está apagada nadie puede registrarse aunque todo lo demás esté bien).
 
-Dos configuraciones que te conviene revisar en **Authentication → Settings**:
-- **Confirm email**: si lo dejas activado, cada líder debe confirmar su correo antes de poder entrar (más seguro, recomendado para producción). Si lo desactivas, entra inmediatamente después de crear la cuenta (más rápido para pruebas internas).
-- **Site URL**: pon aquí la URL donde publiques `index.html` (ej. `https://tuusuario.github.io/mopx` si usas GitHub Pages) — Supabase la usa para los enlaces de confirmación de correo.
+Tu caso específico: el código vive en **GitHub**, pero lo que la gente visita es la URL que te da **Vercel** al desplegar (algo como `https://mopx-tuproyecto.vercel.app`, o tu dominio propio si conectaste uno). Esa es la URL que le importa a Supabase — GitHub nunca aparece aquí, es solo donde vive el código fuente.
+
+Dos configuraciones a revisar en **Authentication → URL Configuration** (a veces aparece como **Authentication → Settings**):
+
+- **Confirm email**: si lo dejas activado, cada líder debe confirmar su correo antes de poder entrar (más seguro, recomendado para producción). Si lo desactivas, entra inmediatamente después de crear la cuenta — así es como lo dejamos para simplificar mientras se valida la plataforma.
+- **Site URL**: pon aquí tu URL real de Vercel, ej. `https://mopx-tuproyecto.vercel.app`. Si más adelante conectas un dominio propio (ej. `https://mopx.transformacionexo.com`), actualiza este valor por ese dominio.
+- **Redirect URLs**: agrega esa misma URL de Vercel a esta lista (algunos paneles la llaman "Additional Redirect URLs"). Esto importa para funciones futuras como "olvidé mi contraseña" o enlaces mágicos, que si no están en esta lista, Supabase los rechaza por seguridad.
+
+> **Nota sobre Vercel:** cada vez que despliegas una nueva versión, Vercel también genera URLs de "preview" distintas a la de producción (por ejemplo `https://mopx-tuproyecto-git-main-tuusuario.vercel.app`). Si vas a probar el login únicamente en tu URL de producción, no necesitas agregar esas URLs de preview a Supabase. Si algún día pruebas el login directamente desde una URL de preview, agrégala también a "Redirect URLs" o el login fallará solo en esa URL específica.
 
 ### Paso 5. Conectar `index.html` con tu proyecto
 
