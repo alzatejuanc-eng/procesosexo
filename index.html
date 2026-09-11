@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOP-X 2.0 · Plataforma de Optimización de Procesos con IA · Transformación ExO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════ ROOT & RESET ══════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#152238;--navy-d:#0B1220;--navy-l:#1F3252;--navy-ll:#2B4670;
+  --gold:#B8860B;--gold-m:#D4A017;--gold-l:#FBF3E0;--gold-lm:#F0DBA0;
+  --l1:#C0392B;--l1-l:#FBEAE8;
+  --l2:#D9822B;--l2-l:#FDF1E4;
+  --l3:#C9A227;--l3-l:#FBF6DE;
+  --l4:#3E8E7E;--l4-l:#E4F3F0;
+  --l5:#2C5F8A;--l5-l:#E7F0F7;
+  --gray-50:#F7F8FA;--gray-100:#EEF0F4;--gray-200:#DEE2E9;--gray-300:#C3C9D4;
+  --gray-400:#8B93A4;--gray-500:#5B6478;--gray-700:#333B4D;--gray-900:#161B27;
+  --white:#FFFFFF;
+  --font-display:'Fraunces',Georgia,serif;
+  --font-body:'DM Sans',-apple-system,sans-serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+  --radius-sm:6px;--radius:10px;--radius-lg:16px;--radius-xl:20px;
+  --shadow-sm:0 1px 3px rgba(15,20,35,.08);
+  --shadow:0 6px 18px rgba(15,20,35,.10);
+  --shadow-lg:0 18px 40px rgba(15,20,35,.16);
+  --sidebar-w:246px;
+}
+html,body{min-height:100vh;font-family:var(--font-body);color:var(--gray-900);background:var(--gray-50);}
+input,select,textarea,button{font-family:var(--font-body);}
+a{text-decoration:none;color:inherit;}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:10px;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
+.anim-fade{animation:fadeIn .35s ease both;}
+
+/* ══════════════════════════ LAYOUT ══════════════════════════ */
+#app{display:flex;min-height:100vh;}
+.sidebar{
+  width:var(--sidebar-w);min-height:100vh;background:var(--navy);
+  display:flex;flex-direction:column;position:sticky;top:0;height:100vh;
+  flex-shrink:0;border-right:1px solid rgba(255,255,255,.06);
+}
+.main{flex:1;overflow:auto;min-height:100vh;}
+.page{padding:32px 34px 70px;max-width:960px;animation:fadeIn .3s ease;}
+
+/* ══════════════════════════ SIDEBAR ══════════════════════════ */
+.sb-logo{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08);}
+.sb-brand{font-size:9.5px;font-weight:700;letter-spacing:.18em;color:var(--gold-m);margin-bottom:6px;text-transform:uppercase;}
+.sb-title{font-family:var(--font-display);font-size:22px;font-weight:700;color:#fff;line-height:1.1;}
+.sb-sub{font-size:10.5px;color:rgba(255,255,255,.4);margin-top:5px;line-height:1.4;}
+.sb-nav{flex:1;padding:10px 0;overflow-y:auto;}
+.sb-section-label{font-size:9.5px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.32);text-transform:uppercase;padding:14px 20px 6px;}
+.sb-item{
+  display:flex;align-items:center;gap:10px;padding:10px 16px;margin:2px 8px;
+  border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:500;
+  color:rgba(255,255,255,.68);transition:background .15s,color .15s;
+}
+.sb-item:hover{background:rgba(255,255,255,.07);color:#fff;}
+.sb-item.active{background:rgba(212,160,23,.18);color:var(--gold-m);font-weight:700;}
+.sb-item-icon{font-size:14px;flex-shrink:0;width:18px;text-align:center;}
+.sb-user{padding:14px 20px;border-top:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.14);}
+.sb-user-name{font-size:12.5px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-user-co{font-size:10.5px;color:rgba(255,255,255,.42);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;}
+.sb-switch{font-size:10px;color:var(--gold-m);margin-top:8px;cursor:pointer;font-weight:600;}
+
+/* ══════════════════════════ COMMON ══════════════════════════ */
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+h1.page-title{font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--navy);line-height:1.15;margin-bottom:8px;}
+.page-desc{font-size:14px;color:var(--gray-500);max-width:640px;line-height:1.55;margin-bottom:26px;}
+.section-title{font-family:var(--font-display);font-size:19px;font-weight:600;color:var(--navy);margin-bottom:4px;}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 22px;border-radius:var(--radius);border:none;cursor:pointer;font-size:13.5px;font-weight:700;transition:all .16s;font-family:var(--font-body);}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--navy);color:#fff;}
+.btn-primary:hover{background:var(--navy-l);}
+.btn-gold{background:var(--gold);color:#fff;}
+.btn-gold:hover{background:var(--gold-m);}
+.btn-ghost{background:var(--gray-100);color:var(--gray-700);border:1px solid var(--gray-200);}
+.btn-ghost:hover{background:var(--gray-200);}
+.btn-outline{background:transparent;color:var(--navy);border:1.5px solid var(--navy);}
+.btn-outline:hover{background:var(--navy);color:#fff;}
+.btn-danger{background:var(--l1-l);color:var(--l1);}
+.btn-danger:hover{background:#f5d2cd;}
+.btn-sm{padding:7px 14px;font-size:12px;}
+.btn-full{width:100%;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+
+.card{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--gray-200);padding:24px;margin-bottom:18px;box-shadow:var(--shadow-sm);}
+.card-tight{padding:16px 18px;}
+
+.badge{display:inline-flex;align-items:center;padding:3px 11px;border-radius:100px;font-size:10.5px;font-weight:700;letter-spacing:.02em;}
+
+input[type=text],input[type=email],input[type=tel],select,textarea{
+  width:100%;padding:11px 13px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);
+  font-size:13.5px;color:var(--gray-900);background:#fff;transition:border .15s;
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold-m);}
+label.f-label{font-size:11.5px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:block;}
+.f-group{margin-bottom:16px;}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+.progress-bar{height:8px;border-radius:100px;background:var(--gray-100);overflow:hidden;}
+.progress-fill{height:100%;border-radius:100px;transition:width .5s ease;}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;
+  padding:12px 22px;border-radius:100px;font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);
+  opacity:0;transition:all .25s;pointer-events:none;z-index:999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.empty{text-align:center;padding:50px 20px;color:var(--gray-400);}
+.empty-icon{font-size:34px;margin-bottom:10px;}
+
+.hidden{display:none !important;}
+
+/* ══════════════════════════ SETUP SCREEN ══════════════════════════ */
+.setup-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:
+  radial-gradient(circle at 20% 20%,#1c2c4a 0%,var(--navy-d) 55%);padding:24px;}
+.setup-card{background:#fff;border-radius:22px;max-width:560px;width:100%;padding:44px 40px;box-shadow:var(--shadow-lg);animation:scaleIn .35s ease;}
+.setup-logo{text-align:center;margin-bottom:22px;}
+.setup-logo .mopx{font-family:var(--font-display);font-size:38px;font-weight:700;color:var(--navy);}
+.setup-logo .sub{font-size:12.5px;color:var(--gray-500);margin-top:4px;}
+.company-pick{border:1.5px solid var(--gray-200);border-radius:var(--radius);padding:13px 16px;margin-bottom:9px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all .15s;}
+.company-pick:hover{border-color:var(--gold-m);background:var(--gold-l);}
+
+/* ══════════════════════════ LEVEL PILLARS BAR ══════════════════════════ */
+.level-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:24px;}
+.level-chip{border-radius:var(--radius);padding:14px 10px;text-align:center;border:2px solid transparent;cursor:pointer;transition:all .15s;}
+.level-chip .num{font-family:var(--font-display);font-size:22px;font-weight:700;}
+.level-chip .lbl{font-size:10.5px;font-weight:600;margin-top:2px;line-height:1.25;}
+.level-chip.active{border-color:currentColor;transform:translateY(-2px);box-shadow:var(--shadow-sm);}
+
+/* ══════════════════════════ SCALE (assessment) ══════════════════════════ */
+.q-card{border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:20px 22px;margin-bottom:14px;background:#fff;}
+.q-dim{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.q-text{font-size:14.5px;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.opt-row{display:flex;flex-direction:column;gap:8px;}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);cursor:pointer;transition:all .14s;}
+.opt:hover{border-color:var(--gold-m);background:var(--gold-l);}
+.opt.sel{border-color:var(--navy);background:var(--navy);}
+.opt.sel .opt-txt{color:#fff;}
+.opt.sel .opt-n{background:var(--gold-m);color:#fff;}
+.opt-n{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--gray-100);color:var(--gray-500);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:var(--font-mono);}
+.opt-txt{font-size:12.8px;line-height:1.4;color:var(--gray-700);}
+
+/* ══════════════════════════ RESULT GAUGE ══════════════════════════ */
+.result-hero{border-radius:var(--radius-xl);padding:30px 32px;color:#fff;margin-bottom:20px;position:relative;overflow:hidden;}
+.result-hero .lvl-num{font-family:var(--font-display);font-size:64px;font-weight:700;line-height:1;}
+.result-hero .lvl-name{font-size:17px;font-weight:700;margin-top:4px;}
+.result-hero .lvl-desc{font-size:13px;opacity:.85;margin-top:8px;max-width:480px;line-height:1.5;}
+
+/* ══════════════════════════ CHECKLIST ══════════════════════════ */
+.chk-item{display:flex;gap:11px;align-items:flex-start;padding:11px 4px;border-bottom:1px solid var(--gray-100);cursor:pointer;}
+.chk-item:last-child{border-bottom:none;}
+.chk-box{flex-shrink:0;width:19px;height:19px;border-radius:5px;border:1.5px solid var(--gray-300);margin-top:1px;
+  display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;transition:all .12s;}
+.chk-box.on{background:var(--navy);border-color:var(--navy);}
+.chk-txt{font-size:13px;line-height:1.5;color:var(--gray-700);}
+.chk-txt.on{color:var(--gray-400);text-decoration:line-through;}
+
+/* ══════════════════════════ PROCESS CARD ══════════════════════════ */
+.proc-card{border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:12px;background:#fff;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;cursor:pointer;transition:box-shadow .15s;}
+.proc-card:hover{box-shadow:var(--shadow);}
+.proc-lvl-badge{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-family:var(--font-display);font-size:22px;font-weight:700;color:#fff;}
+
+/* ══════════════════════════ TOOL GRID ══════════════════════════ */
+.tool-cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.tool-tab{padding:8px 15px;border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--gray-200);color:var(--gray-500);transition:all .15s;}
+.tool-tab.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.tool-item{display:flex;align-items:center;gap:9px;padding:11px 13px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);cursor:pointer;font-size:12.5px;transition:all .14s;}
+.tool-item:hover{border-color:var(--gold-m);}
+.tool-item.sel{border-color:var(--navy);background:var(--navy-l);color:#fff;}
+
+/* ══════════════════════════ FLOW DIAGRAM ══════════════════════════ */
+.flow-legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.flow-legend-item{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--gray-600);}
+.flow-legend-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}
+.flow-scroll{overflow-x:auto;padding-bottom:8px;}
+.flow-grid{display:grid;gap:6px;min-width:min-content;}
+.flow-col-head{font-family:var(--font-mono);font-size:10.5px;color:var(--gray-400);text-align:center;padding:4px 0;font-weight:700;}
+.flow-actor-label{display:flex;align-items:center;font-size:11.5px;font-weight:700;color:var(--navy);padding:8px 10px;background:var(--gray-50);border-radius:var(--radius-sm);white-space:nowrap;}
+.flow-cell{min-width:118px;min-height:64px;display:flex;align-items:stretch;}
+.flow-chip{border-radius:8px;padding:8px 9px;font-size:11px;line-height:1.35;color:#fff;width:100%;position:relative;cursor:pointer;}
+.flow-chip.wait{border:2px dashed rgba(255,255,255,.7);}
+.flow-chip .fc-task{font-weight:700;margin-bottom:2px;}
+.flow-chip .fc-meta{font-size:9.5px;opacity:.85;}
+.flow-empty-cell{width:100%;border-radius:8px;border:1.5px dashed var(--gray-200);}
+.type-manual{background:#8B93A4;}
+.type-rpa{background:#2C5F8A;}
+.type-ia{background:#B8860B;}
+.type-auto{background:#3E8E7E;}
+.flow-step-row{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--gray-100);}
+.flow-step-row:last-child{border-bottom:none;}
+.flow-step-badge{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.flow-step-controls{display:flex;gap:4px;margin-left:auto;}
+.icon-btn{width:26px;height:26px;border-radius:6px;border:1px solid var(--gray-200);background:#fff;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;color:var(--gray-500);}
+.icon-btn:hover{background:var(--gray-100);}
+
+/* ══════════════════════════ AUTH / CONFIG SCREENS ══════════════════════════ */
+.auth-tabs{display:flex;gap:4px;background:var(--gray-100);padding:4px;border-radius:12px;margin-bottom:22px;}
+.auth-tab{flex:1;text-align:center;padding:10px;border-radius:9px;font-size:13px;font-weight:700;color:var(--gray-500);cursor:pointer;transition:all .15s;}
+.auth-tab.active{background:#fff;color:var(--navy);box-shadow:var(--shadow-sm);}
+.auth-note{text-align:center;font-size:11px;color:var(--gray-400);margin-top:14px;line-height:1.5;}
+.loader-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--navy-d);}
+.loader-dot{width:10px;height:10px;border-radius:50%;background:var(--gold-m);animation:pulseDot 1s infinite ease-in-out;}
+@keyframes pulseDot{0%,100%{opacity:.3;transform:scale(.8);}50%{opacity:1;transform:scale(1.15);}}
+
+/* ══════════════════════════ IMPORT BY IMAGE ══════════════════════════ */
+.dropzone{border:2px dashed var(--gray-300);border-radius:var(--radius-lg);padding:36px 20px;text-align:center;cursor:pointer;transition:all .15s;background:#fff;}
+.dropzone:hover,.dropzone.drag{border-color:var(--gold-m);background:var(--gold-l);}
+.import-queue-item{display:flex;gap:14px;align-items:center;padding:14px;border:1px solid var(--gray-200);border-radius:var(--radius);margin-bottom:10px;background:#fff;}
+.import-thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--gray-100);}
+.import-fields{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.import-fields input{font-size:12.5px;padding:8px 10px;}
+.coming-soon-card{border:1.5px dashed var(--gold-lm);background:var(--gold-l);border-radius:var(--radius-lg);padding:20px 22px;margin-bottom:18px;}
+.coming-soon-badge{display:inline-flex;align-items:center;gap:5px;background:var(--gold);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;}
+.status-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;text-transform:uppercase;letter-spacing:.03em;}
+.status-pending{background:var(--gold-l);color:var(--gold);}
+.source-img-wrap{border:1px solid var(--gray-200);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:18px;background:var(--gray-50);}
+.source-img-wrap img{width:100%;max-height:380px;object-fit:contain;display:block;background:#f2f2f2;}
+.source-img-caption{padding:12px 16px;font-size:12px;color:var(--gray-500);}
+
+/* ══════════════════════════ MEJORAS (opportunities) ══════════════════════════ */
+.mejora-card{border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:12px;background:#fff;}
+.mejora-rank{width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+/* ══════════════════════════ TABLE ══════════════════════════ */
+.tbl{width:100%;border-collapse:collapse;font-size:12.8px;}
+.tbl th{background:var(--navy);color:#fff;text-align:left;padding:10px 12px;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;}
+.tbl td{padding:11px 12px;border-bottom:1px solid var(--gray-100);color:var(--gray-700);}
+.tbl tr:nth-child(even) td{background:var(--gray-50);}
+
+@media print{
+  .sidebar,.no-print{display:none !important;}
+  .main{overflow:visible;}
+  .page{max-width:100%;padding:0;}
+  body{background:#fff;}
+}
+@media (max-width:860px){
+  .sidebar{position:fixed;left:0;top:0;transform:translateX(-100%);z-index:200;transition:transform .25s;}
+  .sidebar.open{transform:translateX(0);}
+  .page{padding:20px 16px 60px;}
+  .grid2,.f-row,.tool-grid{grid-template-columns:1fr;}
+  .level-bar{grid-template-columns:repeat(5,1fr);}
+  .level-chip .lbl{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- Pantalla: la plataforma aún no está lista para el público (mensaje sin detalles técnicos) -->
+<div id="maintenance-screen" class="setup-wrap hidden">
+  <div class="setup-card" style="text-align:center">
+    <div class="setup-logo">
+      <div class="mopx">MOP-X <span style="color:var(--gold)">2.0</span></div>
+      <div class="sub">Modelo de Optimización de Procesos con Inteligencia Artificial</div>
+    </div>
+    <div style="font-size:34px;margin:10px 0 14px">🛠️</div>
+    <div style="font-weight:700;color:var(--navy);font-size:15px;margin-bottom:8px">Estamos preparando tu plataforma</div>
+    <div style="font-size:13px;color:var(--gray-500);line-height:1.6">Vuelve en unos minutos. Si el mensaje persiste, contacta al equipo responsable de esta plataforma.</div>
+  </div>
+</div>
+
+
+<!-- Pantalla: cargando -->
+<div id="loading-screen" class="loader-wrap">
+  <div style="display:flex;gap:6px"><div class="loader-dot"></div><div class="loader-dot" style="animation-delay:.15s"></div><div class="loader-dot" style="animation-delay:.3s"></div></div>
+</div>
+
+<!-- Pantalla: login / crear cuenta -->
+<div id="auth-screen" class="setup-wrap hidden">
+  <div class="setup-card">
+    <div class="setup-logo">
+      <div class="mopx">MOP-X <span style="color:var(--gold)">2.0</span></div>
+      <div class="sub">Modelo de Optimización de Procesos con Inteligencia Artificial</div>
+    </div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Iniciar sesión</div>
+      <div class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Crear cuenta</div>
+    </div>
+    <div id="auth-form"></div>
+    <div class="auth-note">Tus datos se guardan de forma privada en tu propio proyecto de Supabase. Nadie más que tú puede verlos.</div>
+  </div>
+</div>
+
+<!-- Pantalla: crear perfil de empresa (onboarding tras primer login) -->
+<div id="onboarding-screen" class="setup-wrap hidden">
+  <div class="setup-card">
+    <div class="setup-logo"><div class="mopx">MOP-X <span style="color:var(--gold)">2.0</span></div><div class="sub">Un último paso: cuéntanos de tu empresa</div></div>
+    <div id="onboarding-form"></div>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <div class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="sb-brand">Transformación ExO</div>
+      <div class="sb-title">MOP-X 2.0</div>
+      <div class="sb-sub">Optimización de procesos con IA · Juan Carlos Alzate García</div>
+    </div>
+    <div class="sb-nav" id="sb-nav"></div>
+    <div class="sb-user">
+      <div class="sb-user-name" id="sb-user-name">—</div>
+      <div class="sb-user-co" id="sb-user-co">—</div>
+      <div class="sb-switch" onclick="handleSignOut()">⏻ Cerrar sesión</div>
+    </div>
+  </div>
+  <div class="main"><div id="page-root"></div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   MOP-X 2.0 — CONFIGURACIÓN DE SUPABASE
+   Reemplaza estos dos valores por los de tu propio proyecto de Supabase.
+   Instrucciones completas en SUPABASE_SETUP.md
+   ═══════════════════════════════════════════════════════════════════════ */
+const SUPABASE_URL = 'https://TU-PROYECTO.supabase.co';
+const SUPABASE_ANON_KEY = 'TU-ANON-KEY-PUBLICA';
+
+const SUPABASE_CONFIGURED = !SUPABASE_URL.includes('TU-PROYECTO') && !SUPABASE_ANON_KEY.includes('TU-ANON-KEY');
+
+let sb = null;
+if (SUPABASE_CONFIGURED) {
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ESTADO GLOBAL
+   ═══════════════════════════════════════════════════════════════════════ */
+let STATE = { session:null, cid:null, data:null, page:'dashboard', activeProc:null, quizIdx:0, toolTab:'bpm', importQueue:[] };
+let AUTH_TAB = 'login';
+
+function gid(){
+  if (window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID();
+  // Fallback UUID v4 generator for older browsers
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random()*16|0, v = c==='x'?r:(r&0x3|0x8);
+    return v.toString(16);
+  });
+}
+function esc(s){return (s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function safeLog(level, ...args){
+  try{
+    if (typeof console !== 'undefined' && typeof console[level] === 'function') { console[level](...args); return; }
+    if (typeof console !== 'undefined' && typeof console.log === 'function') { console.log(...args); return; }
+  }catch(e){ /* algunos entornos de vista previa bloquean console por completo: no hacer nada */ }
+}
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(window._toastTimer);window._toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
+}
+function showOnly(id){
+  ['maintenance-screen','loading-screen','auth-screen','onboarding-screen','app'].forEach(x=>{
+    document.getElementById(x).classList.toggle('hidden', x!==id);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   AUTENTICACIÓN
+   ═══════════════════════════════════════════════════════════════════════ */
+function switchAuthTab(tab){
+  AUTH_TAB=tab;
+  document.getElementById('tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
+  renderAuthForm();
+}
+function renderAuthForm(){
+  const wrap=document.getElementById('auth-form');
+  if(AUTH_TAB==='login'){
+    wrap.innerHTML=`
+      <div class="f-group"><label class="f-label">Correo electrónico</label><input id="au-email" type="email" placeholder="tu@empresa.com"></div>
+      <div class="f-group"><label class="f-label">Contraseña</label><input id="au-pass" type="password" placeholder="••••••••"></div>
+      <button class="btn btn-primary btn-full" onclick="handleLogin()">Iniciar sesión →</button>`;
+  } else {
+    wrap.innerHTML=`
+      <div class="f-group"><label class="f-label">Correo electrónico</label><input id="au-email" type="email" placeholder="tu@empresa.com"></div>
+      <div class="f-group"><label class="f-label">Contraseña (mínimo 6 caracteres)</label><input id="au-pass" type="password" placeholder="••••••••"></div>
+      <button class="btn btn-gold btn-full" onclick="handleSignup()">Crear cuenta →</button>`;
+  }
+}
+async function handleLogin(){
+  const email=document.getElementById('au-email').value.trim();
+  const password=document.getElementById('au-pass').value;
+  if(!email||!password){toast('Completa correo y contraseña');return;}
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if(error){ toast('No se pudo iniciar sesión: '+error.message); return; }
+  STATE.session = data.session;
+  await afterAuth();
+}
+async function handleSignup(){
+  const email=document.getElementById('au-email').value.trim();
+  const password=document.getElementById('au-pass').value;
+  if(!email||!password){toast('Completa correo y contraseña');return;}
+  if(password.length<6){toast('La contraseña necesita al menos 6 caracteres');return;}
+  const { data, error } = await sb.auth.signUp({ email, password });
+  if(error){ toast('No se pudo crear la cuenta: '+error.message); return; }
+  if(!data.session){
+    toast('Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesión.');
+    switchAuthTab('login');
+    return;
+  }
+  STATE.session = data.session;
+  await afterAuth();
+}
+async function handleSignOut(){
+  await sb.auth.signOut();
+  STATE = { session:null, cid:null, data:null, page:'dashboard', activeProc:null, quizIdx:0, toolTab:'bpm', importQueue:[] };
+  showOnly('auth-screen');
+  switchAuthTab('login');
+}
+
+async function afterAuth(){
+  showOnly('loading-screen');
+  const uid = STATE.session.user.id;
+  const { data: companies, error } = await sb.from('companies').select('*').eq('user_id', uid).limit(1);
+  if(error){ toast('Error cargando tu empresa: '+error.message); showOnly('auth-screen'); return; }
+  if(!companies || !companies.length){
+    renderOnboardingForm();
+    showOnly('onboarding-screen');
+    return;
+  }
+  await loadCompanyInto(companies[0]);
+  showApp();
+}
+
+function renderOnboardingForm(){
+  document.getElementById('onboarding-form').innerHTML=`
+    <div class="f-group"><label class="f-label">Nombre de la empresa</label><input id="ob-co" type="text" placeholder="Ej: Grupo Andino S.A."></div>
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">Sector</label><input id="ob-sector" type="text" placeholder="Ej: Retail, Inmobiliario..."></div>
+      <div class="f-group"><label class="f-label">País</label><input id="ob-country" type="text" placeholder="Ej: Ecuador"></div>
+    </div>
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">Tu nombre</label><input id="ob-name" type="text" placeholder="Nombre del líder"></div>
+      <div class="f-group"><label class="f-label">Tu cargo</label><input id="ob-role" type="text" placeholder="Ej: Gerente de Operaciones"></div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="completeOnboarding()">Entrar a mi diagnóstico MOP-X →</button>`;
+}
+async function completeOnboarding(){
+  const name=document.getElementById('ob-co').value.trim();
+  if(!name){toast('Escribe el nombre de tu empresa');return;}
+  const uid = STATE.session.user.id;
+  const payload = {
+    user_id: uid, name,
+    sector: document.getElementById('ob-sector').value.trim(),
+    country: document.getElementById('ob-country').value.trim(),
+    contact_name: document.getElementById('ob-name').value.trim(),
+    role: document.getElementById('ob-role').value.trim(),
+    tool_stack: {}, roadmap: {}
+  };
+  const { data, error } = await sb.from('companies').insert(payload).select().single();
+  if(error){ toast('No se pudo crear la empresa: '+error.message); return; }
+  await loadCompanyInto(data);
+  showApp();
+}
+
+async function loadCompanyInto(row){
+  STATE.cid = row.id;
+  const { data: procs, error } = await sb.from('processes').select('*').eq('company_id', row.id).order('created_at', { ascending:true });
+  if(error){ toast('Error cargando procesos: '+error.message); }
+  STATE.data = {
+    profile: { name: row.name, sector: row.sector, country: row.country, contactName: row.contact_name, role: row.role, email: STATE.session.user.email },
+    processes: (procs||[]).map(pr=>({
+      id: pr.id, name: pr.name, area: pr.area,
+      diagnostic: pr.diagnostic, phaseChecklist: pr.phase_checklist||{},
+      flow: pr.flow||{steps:[]}, importStatus: pr.import_status||'manual', sourceImagePath: pr.source_image_path||null,
+      createdAt: pr.created_at
+    })),
+    roadmap: row.roadmap||{}, toolStack: row.tool_stack||{}
+  };
+}
+function showApp(){
+  showOnly('app');
+  document.getElementById('sb-user-name').textContent = STATE.data.profile.contactName || 'Líder';
+  document.getElementById('sb-user-co').textContent = STATE.data.profile.name;
+  STATE.page='dashboard'; STATE.activeProc=null;
+  renderNav(); renderPage();
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PERSISTENCIA (Supabase)
+   ═══════════════════════════════════════════════════════════════════════ */
+async function saveData(){
+  if(!STATE.session||!STATE.cid) return;
+  const uid = STATE.session.user.id;
+  const p = STATE.data.profile;
+  try{
+    const { error: e1 } = await sb.from('companies').update({
+      name: p.name, sector: p.sector, country: p.country, contact_name: p.contactName, role: p.role,
+      tool_stack: STATE.data.toolStack||{}, roadmap: STATE.data.roadmap||{}, updated_at: new Date().toISOString()
+    }).eq('id', STATE.cid);
+    if(e1) throw e1;
+    if(STATE.data.processes.length){
+      const rows = STATE.data.processes.map(pr=>({
+        id: pr.id, company_id: STATE.cid, user_id: uid, name: pr.name, area: pr.area||'',
+        diagnostic: pr.diagnostic||null, phase_checklist: pr.phaseChecklist||{}, flow: pr.flow||{steps:[]},
+        import_status: pr.importStatus||'manual', source_image_path: pr.sourceImagePath||null,
+        updated_at: new Date().toISOString()
+      }));
+      const { error: e2 } = await sb.from('processes').upsert(rows);
+      if(e2) throw e2;
+    }
+  }catch(e){
+    safeLog('error', e);
+    toast('No se pudo guardar en Supabase: '+(e.message||'error desconocido'));
+  }
+}
+async function deleteProcessRemote(id){
+  try{ const { error } = await sb.from('processes').delete().eq('id', id); if(error) throw error; }
+  catch(e){ toast('No se pudo eliminar en Supabase: '+(e.message||'')); }
+}
+async function deleteCompanyRemote(){
+  try{ const { error } = await sb.from('companies').delete().eq('id', STATE.cid); if(error) throw error; }
+  catch(e){ toast('No se pudo eliminar la empresa: '+(e.message||'')); }
+}
+
+const LEVELS=[
+ {n:1,key:'l1',color:'var(--l1)',bg:'var(--l1-l)',title:'Procesos básicos, IA exploratoria',
+  desc:'Procesos poco estandarizados y uso de IA en modo prueba de concepto, sin integración en el negocio core.',
+  metodologias:['PDCA','5S','Mapas de proceso simples (sin BPMN formal)'],
+  ia:'Pilotos aislados: chatbots básicos y automatizaciones sencillas, sin conexión entre sí.',
+  kpis:['% de procesos críticos documentados','Número de pilotos de IA activos frente a procesos estratégicos','Tasa de incidencias operativas recurrentes'],
+  acciones:['Formalizar la documentación de procesos críticos con BPMN ligero','Introducir PDCA como ciclo básico de mejora en los equipos clave','Definir una estrategia inicial de IA ligada a problemas operativos concretos']},
+ {n:2,key:'l2',color:'var(--l2)',bg:'var(--l2-l)',title:'Procesos estandarizados, IA asistida',
+  desc:'Procesos más estables gracias a Lean básico, con la IA como apoyo a tareas humanas, no como ejecutora autónoma.',
+  metodologias:['Lean','Kaizen','Value Stream Mapping (VSM)'],
+  ia:'Herramientas de inteligencia asistida: copilots, recomendadores, automatización de tareas administrativas.',
+  kpis:['% de procesos con mapa de flujo de valor actualizado','Reducción de tiempos de ciclo en procesos intervenidos','Ratio de adopción de IA asistida'],
+  acciones:['Aplicar Lean + VSM para identificar desperdicio y tareas candidatas a IA','Formalizar Kaizen para capturar ideas de automatización desde la operación','Vincular cada uso de IA a un indicador de eficiencia o experiencia de cliente']},
+ {n:3,key:'l3',color:'var(--l3)',bg:'var(--l3-l)',title:'Procesos optimizados, IA integrada',
+  desc:'La IA se integra en los flujos de trabajo y en las decisiones, soportada por Six Sigma y BPM.',
+  metodologias:['Six Sigma (DMAIC)','Lean Six Sigma','BPM con orquestación entre sistemas'],
+  ia:'Modelos incrustados en el proceso (clasificación, predicción, recomendación), RPA inteligente y automatización de decisiones.',
+  kpis:['Reducción de variabilidad y defectos en procesos clave','% de decisiones operativas soportadas por IA','ROI de proyectos de automatización con IA'],
+  acciones:['Establecer gobernanza de datos y calidad como habilitador de IA','Integrar procesos en plataformas BPM/Workflow que orquesten tareas humanas y agentes','Adoptar frameworks ágiles para iterar sobre modelos de IA y procesos optimizados']},
+ {n:4,key:'l4',color:'var(--l4)',bg:'var(--l4-l)',title:'Procesos rediseñados, IA agéntica',
+  desc:'La organización rediseña procesos "nativamente inteligentes" y escala la IA a múltiples dominios.',
+  metodologias:['BPR (rediseño radical)','BPM avanzado','Teoría de Restricciones (TOC)'],
+  ia:'Agentes que actúan sobre procesos end-to-end (backoffice, atención al cliente, operaciones) con capacidad proactiva.',
+  kpis:['Número de procesos "inteligentes" rediseñados end-to-end','Ganancias de productividad atribuibles a agentes de IA','Cobertura de gobernanza sobre flujos de IA agéntica'],
+  acciones:['Mapear procesos candidatos a rediseño radical priorizando el mayor impacto','Construir una biblioteca de componentes y patrones de IA reutilizables','Establecer matriz RACI y modelo operativo para la IA agéntica']},
+ {n:5,key:'l5',color:'var(--l5)',bg:'var(--l5-l)',title:'Organización evolutiva, IA estratégica',
+  desc:'La empresa opera como sistema adaptativo donde proceso, dato e IA evolucionan de forma integrada.',
+  metodologias:['Combinación integral de todas las capas anteriores','Gobernanza de IA (NIST, OWASP, MITRE)'],
+  ia:'Ecosistema de soluciones y agentes alineados a la estrategia, con innovación continua y experimentación controlada.',
+  kpis:['% de ingresos o ahorro atribuible a iniciativas de IA','Tiempo medio entre idea de mejora y despliegue en producción','Nivel de cumplimiento de políticas éticas y de riesgo en IA'],
+  acciones:['Alinear formalmente el portafolio de IA con los objetivos estratégicos','Implementar gobierno de IA responsable con métricas de riesgo, sesgo y transparencia','Fomentar innovación abierta y co-creación con socios tecnológicos']}
+];
+
+const QUESTIONS=[
+ {dim:'Documentación de procesos',text:'¿Cómo está documentado hoy el proceso que estás evaluando?',
+  opts:['No existe documentación, todo vive en la memoria de una o dos personas.',
+        'Existen diagramas simples o listas de pasos, pero desactualizados.',
+        'El proceso está mapeado en BPMN o similar y se revisa ocasionalmente.',
+        'El mapa del proceso está integrado en una plataforma BPM y se actualiza con datos reales.',
+        'El proceso se documenta y versiona automáticamente a partir de su propia ejecución.']},
+ {dim:'Estandarización (Lean/Kaizen)',text:'¿Qué tan estandarizada está la forma de ejecutar este proceso entre distintas personas o turnos?',
+  opts:['Cada persona lo hace a su manera; no hay un estándar definido.',
+        'Existe un estándar básico, pero se cumple de forma irregular.',
+        'El estándar se sigue de forma consistente y se revisa con Lean/Kaizen.',
+        'El estándar se aplica y se mejora continuamente con datos de ejecución.',
+        'El proceso se rediseña de forma proactiva antes de que aparezca el desperdicio.']},
+ {dim:'Control de variabilidad (Six Sigma)',text:'¿Cómo se controla la variabilidad, los errores o defectos de este proceso?',
+  opts:['No se mide la variabilidad; los errores se detectan cuando ya generaron un problema.',
+        'Se llevan registros manuales de errores, sin análisis estadístico.',
+        'Se aplican ciclos DMAIC puntuales para causas raíz específicas.',
+        'Existen controles estadísticos y alertas tempranas integradas al flujo.',
+        'La variabilidad se predice y se corrige de forma automática antes de impactar el resultado.']},
+ {dim:'Uso de IA en el proceso',text:'¿Qué rol cumple hoy la Inteligencia Artificial dentro de este proceso?',
+  opts:['Ninguno; el proceso es 100% manual o con automatización tradicional sin IA.',
+        'Existen pilotos aislados de IA (chatbot, asistente puntual) sin integración real.',
+        'La IA asiste tareas humanas específicas dentro del flujo (redacción, análisis, clasificación).',
+        'Modelos de IA están incrustados en el proceso y participan en decisiones operativas.',
+        'Agentes de IA ejecutan tramos completos del proceso de forma autónoma y supervisada.']},
+ {dim:'Automatización (RPA)',text:'¿Cuánta automatización estructurada (RPA / workflow) existe hoy en este proceso?',
+  opts:['Ninguna; todas las tareas repetitivas se hacen manualmente.',
+        'Automatización puntual de una o dos tareas administrativas.',
+        'Varias tareas transaccionales están automatizadas con RPA o workflow.',
+        'La automatización cubre la mayoría del flujo y se coordina con BPM.',
+        'RPA y agentes de IA se coordinan entre sí para ejecutar el proceso end-to-end.']},
+ {dim:'Integración de sistemas',text:'¿Qué tan integrados están los sistemas que participan en este proceso?',
+  opts:['Los sistemas están aislados; la información se traslada manualmente entre ellos.',
+        'Existen algunas integraciones básicas (exportar/importar archivos).',
+        'Los sistemas clave están conectados mediante APIs o un iPaaS.',
+        'La integración permite que agentes de IA lean y actúen sobre varios sistemas.',
+        'Los sistemas y agentes operan como un ecosistema único y auditable.']},
+ {dim:'Datos y decisiones',text:'¿Con qué se toman hoy las decisiones operativas dentro de este proceso?',
+  opts:['Con intuición y experiencia de quien opera el proceso.',
+        'Con reportes manuales que se revisan de forma periódica.',
+        'Con dashboards de BI actualizados regularmente.',
+        'Con modelos predictivos que recomiendan la siguiente acción.',
+        'Con decisiones automatizadas por IA, auditadas y con intervención humana solo por excepción.']},
+ {dim:'Gobernanza y riesgo de IA',text:'¿Existen políticas de gobierno, seguridad o riesgo para el uso de IA en este proceso?',
+  opts:['No existe ninguna política ni responsable definido.',
+        'Hay reglas informales, no documentadas.',
+        'Existe una política básica de uso aceptable de IA.',
+        'Se aplican marcos de referencia (NIST/OWASP) y se audita el uso de IA.',
+        'La gobernanza de IA está integrada al proceso con métricas de riesgo y transparencia en tiempo real.']},
+ {dim:'Cultura de mejora continua',text:'¿Cómo participa el equipo que ejecuta este proceso en su propia mejora?',
+  opts:['No hay espacio ni ritual para proponer mejoras.',
+        'Las mejoras dependen de iniciativas aisladas de algunas personas.',
+        'Existen rituales periódicos de mejora continua (retrospectivas, Kaizen).',
+        'El equipo usa IA para identificar oportunidades de mejora de forma proactiva.',
+        'La mejora continua es un ciclo autosostenido, medido y con incentivos claros.']},
+ {dim:'Escalabilidad / rediseño',text:'¿Qué tan preparado está este proceso para ser rediseñado o escalado a otras áreas?',
+  opts:['El proceso es tan específico de una persona o área que no podría replicarse.',
+        'Podría replicarse con un esfuerzo manual considerable.',
+        'Existen componentes reutilizables (plantillas, checklists) que facilitan la réplica.',
+        'El proceso está construido como un patrón o módulo reutilizable en otras áreas.',
+        'El proceso se autoevalúa y se propone a sí mismo como candidato de escalamiento.']}
+];
+
+const PHASES=[
+ {n:1,color:'var(--l1)',title:'Diagnóstico estructurado',subtitle:'Mapear el "as-is" y priorizar casos de uso',
+  items:['Analizar el proceso, el dato, los riesgos y las oportunidades de mejora',
+         'Mapear el "as-is" con BPMN ligero, VSM y PDCA',
+         'Levantar el inventario de casos de uso de IA priorizados por impacto y viabilidad',
+         'Definir la línea base de KPIs del nivel de madurez actual']},
+ {n:2,color:'var(--l2)',title:'Optimización sin IA',subtitle:'Estabilizar con Lean / Six Sigma antes de automatizar',
+  items:['Eliminar desperdicios identificados en el diagnóstico (Lean)',
+         'Ejecutar un ciclo DMAIC si hay alta variabilidad o defectos recurrentes',
+         'Estabilizar el proceso "to-be" y documentarlo',
+         'Identificar los puntos exactos donde la IA puede amplificar el beneficio']},
+ {n:3,color:'var(--l3)',title:'Integración de IA y automatización',subtitle:'Desplegar IA, RPA y BPM sobre el proceso ya optimizado',
+  items:['Diseñar soluciones de IA + RPA + BPM alineadas al proceso optimizado',
+         'Establecer gobernanza de datos y calidad como habilitador de IA',
+         'Desplegar el primer caso de uso de IA sobre el proceso (copiloto, clasificador, agente acotado)',
+         'Medir el impacto real frente a la línea base (tiempos, errores, throughput)']},
+ {n:4,color:'var(--l4)',title:'Escalamiento, gobernanza y evolución',subtitle:'Convertir la mejora en un ecosistema reutilizable',
+  items:['Construir una biblioteca de componentes y patrones de IA reutilizables',
+         'Establecer matriz RACI y modelo operativo para la IA agéntica',
+         'Implementar políticas de gobierno de IA (riesgo, sesgo, transparencia)',
+         'Definir el roadmap de escalamiento hacia el siguiente proceso o nivel']}
+];
+
+const ROADMAP=[
+ {range:'Días 1–30',color:'var(--l1)',title:'Activar la Fase 1 — Diagnóstico',
+  items:['Seleccionar el proceso crítico de mayor impacto visible para el primer ciclo',
+         'Mapear el "as-is" con BPMN ligero y Value Stream Mapping',
+         'Levantar el inventario inicial de casos de uso de IA priorizados',
+         'Definir la línea base de KPIs del nivel de madurez actual']},
+ {range:'Días 31–60',color:'var(--l2)',title:'Activar la Fase 2 — Optimización sin IA',
+  items:['Aplicar Lean y Kaizen para eliminar desperdicio en el flujo diagnosticado',
+         'Ejecutar un ciclo DMAIC si el proceso presenta alta variabilidad',
+         'Estabilizar el proceso "to-be" y documentar dónde puede amplificar la IA',
+         'Establecer la gobernanza mínima de datos para la siguiente fase']},
+ {range:'Días 61–90',color:'var(--l3)',title:'Activar la Fase 3 — Arranque de integración de IA',
+  items:['Desplegar el primer caso de uso de IA sobre el proceso ya optimizado',
+         'Conectar la automatización (RPA/workflow) con el agente de IA',
+         'Medir el impacto real frente a la línea base definida en la Fase 1',
+         'Definir el roadmap de escalamiento hacia el siguiente proceso']}
+];
+
+const TOOL_CATS=[
+ {key:'bpm',label:'BPM / BPMN',icon:'🧩',items:['Bizagi','Appian','Camunda','Bonita BPM','IBM Business Automation Workflow','Oracle BPM Suite']},
+ {key:'rpa',label:'Automatización / RPA',icon:'⚙️',items:['UiPath','Power Automate','Automation Anywhere','Blue Prism','Make','n8n','Zapier']},
+ {key:'ia',label:'IA empresarial y agentes',icon:'🤖',items:['Claude (Anthropic)','Claude Code / Cowork / Skills','Microsoft Copilot 365','Google Gemini Workspace','Notion AI','Copilot Studio']},
+ {key:'analitica',label:'Analítica y monitoreo',icon:'📊',items:['Power BI','Looker','Tableau','Process Mining','Dashboards nativos de BPM']},
+ {key:'integracion',label:'Integración / orquestación',icon:'🔗',items:['MuleSoft','Boomi','Make (iPaaS)','ESB corporativo (IBM/Oracle)','Conectores MCP']},
+ {key:'gobierno',label:'Gobierno y riesgo de IA',icon:'🛡️',items:['Marco NIST','Marco OWASP','Marco MITRE','Plataforma interna de gobernanza de IA']}
+];
+
+function pageDashboard(){
+  const procs=STATE.data.processes;
+  const withScore=procs.filter(p=>p.diagnostic&&p.diagnostic.level);
+  const avg=withScore.length?(withScore.reduce((a,p)=>a+p.diagnostic.level,0)/withScore.length):0;
+  const avgLvl=LEVELS[Math.max(0,Math.round(avg)-1)]||LEVELS[0];
+
+  root().innerHTML=`<div class="page">
+    <div class="eyebrow">Panel general</div>
+    <h1 class="page-title">Hola, ${esc(STATE.data.profile.contactName||'líder')} 👋</h1>
+    <div class="page-desc">Este es el estado de madurez de optimización de procesos con IA de <b>${esc(STATE.data.profile.name)}</b>. Diagnostica tus procesos críticos y avanza nivel por nivel.</div>
+
+    <div class="grid3" style="margin-bottom:6px">
+      <div class="card card-tight" style="text-align:center">
+        <div style="font-family:var(--font-display);font-size:34px;font-weight:700;color:var(--navy)">${procs.length}</div>
+        <div style="font-size:11.5px;color:var(--gray-500);font-weight:600">Procesos registrados</div>
+      </div>
+      <div class="card card-tight" style="text-align:center">
+        <div style="font-family:var(--font-display);font-size:34px;font-weight:700;color:var(--navy)">${withScore.length}</div>
+        <div style="font-size:11.5px;color:var(--gray-500);font-weight:600">Diagnósticos completados</div>
+      </div>
+      <div class="card card-tight" style="text-align:center">
+        <div style="font-family:var(--font-display);font-size:34px;font-weight:700;color:${avgLvl.color}">${withScore.length?avgLvl.n:'—'}</div>
+        <div style="font-size:11.5px;color:var(--gray-500);font-weight:600">Nivel de madurez promedio</div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:26px 0 12px">
+      <div class="section-title">Tus procesos</div>
+      <button class="btn btn-gold btn-sm" onclick="goPage('procesos')">+ Añadir proceso</button>
+    </div>
+    ${procs.length? procs.map(p=>procCardHtml(p)).join('') : `
+      <div class="card empty">
+        <div class="empty-icon">🧭</div>
+        <div style="font-weight:700;color:var(--navy);margin-bottom:4px">Todavía no has registrado ningún proceso</div>
+        <div style="font-size:12.5px;margin-bottom:16px">Empieza por el proceso más crítico de tu operación: el que más tiempo, dinero o errores te está costando hoy.</div>
+        <button class="btn btn-primary" onclick="goPage('procesos')">Registrar mi primer proceso</button>
+      </div>`}
+
+    ${procs.length?`<div class="card" style="margin-top:22px;background:var(--gold-l);border-color:var(--gold-lm)">
+      <div style="font-weight:700;color:var(--navy);font-size:13.5px;margin-bottom:6px">💡 Siguiente paso recomendado</div>
+      <div style="font-size:13px;color:var(--gray-700);line-height:1.5">${nextStepSuggestion()}</div>
+    </div>`:''}
+  </div>`;
+}
+function nextStepSuggestion(){
+  const procs=STATE.data.processes;
+  const noDiag=procs.find(p=>!p.diagnostic||!p.diagnostic.level);
+  if(noDiag) return `El proceso <b>"${esc(noDiag.name)}"</b> todavía no tiene diagnóstico. Complétalo para saber en qué nivel de madurez está y qué acciones activar primero.`;
+  const lowest=[...procs].filter(p=>p.diagnostic&&p.diagnostic.level).sort((a,b)=>a.diagnostic.level-b.diagnostic.level)[0];
+  if(lowest) return `Tu proceso con menor madurez es <b>"${esc(lowest.name)}"</b> (Nivel ${lowest.diagnostic.level}). Revisa su Fase de intervención activa y activa las líneas de acción del siguiente nivel.`;
+  return `Registra un nuevo proceso crítico para ampliar el diagnóstico de tu organización.`;
+}
+function procCardHtml(p){
+  const lvl=p.diagnostic&&p.diagnostic.level?LEVELS[p.diagnostic.level-1]:null;
+  return `<div class="proc-card" onclick="openProcess('${p.id}')">
+    <div style="display:flex;align-items:center;gap:14px">
+      <div class="proc-lvl-badge" style="background:${lvl?lvl.color:'var(--gray-300)'}">${lvl?lvl.n:'?'}</div>
+      <div>
+        <div style="font-weight:700;font-size:14.5px;color:var(--navy)">${esc(p.name)} ${p.importStatus==='pending_ai'?'<span class="status-badge status-pending">🖼️ IA pendiente</span>':''}</div>
+        <div style="font-size:11.5px;color:var(--gray-500)">${esc(p.area||'Sin área asignada')} ${lvl?' · '+esc(lvl.title):' · Sin diagnóstico'}</div>
+      </div>
+    </div>
+    <div style="color:var(--gray-300);font-size:18px">→</div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PAGE: MAPA DE MADUREZ (reference)
+   ═══════════════════════════════════════════════════════════════════════ */
+function pageMapa(){
+  root().innerHTML=`<div class="page">
+    <div class="eyebrow">Marco de referencia</div>
+    <h1 class="page-title">Mapa de Madurez MOP-X 2.0</h1>
+    <div class="page-desc">Cinco niveles que describen la evolución de cualquier proceso de negocio: de lo indocumentado a lo agéntico. El orden es obligatorio — no se puede saltar un nivel sin haber estabilizado el anterior.</div>
+    ${LEVELS.map(l=>`
+      <div class="card" style="border-left:5px solid ${l.color}">
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <div style="font-family:var(--font-display);font-size:38px;font-weight:700;color:${l.color};flex-shrink:0">${l.n}</div>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:16px;color:var(--navy);margin-bottom:4px">${l.title}</div>
+            <div style="font-size:13px;color:var(--gray-600);margin-bottom:12px;line-height:1.5">${l.desc}</div>
+            <div class="grid2">
+              <div>
+                <div style="font-size:10.5px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Metodologías base</div>
+                <div style="font-size:12.5px;color:var(--gray-700);line-height:1.7">${l.metodologias.map(m=>'· '+m).join('<br>')}</div>
+              </div>
+              <div>
+                <div style="font-size:10.5px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Rol de la IA</div>
+                <div style="font-size:12.5px;color:var(--gray-700);line-height:1.5">${l.ia}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PAGE: PROCESOS (list + create)
+   ═══════════════════════════════════════════════════════════════════════ */
+function pageProcesos(){
+  root().innerHTML=`<div class="page">
+    <div class="eyebrow">Trabajo por proceso</div>
+    <h1 class="page-title">Mis procesos</h1>
+    <div class="page-desc">Registra los procesos críticos de tu empresa. Cada uno tiene su propio diagnóstico, sus 4 fases de intervención y su nivel de madurez.</div>
+    <div class="card">
+      <div class="section-title" style="margin-bottom:14px">Registrar nuevo proceso</div>
+      <div class="f-row">
+        <div class="f-group"><label class="f-label">Nombre del proceso</label><input id="np-name" type="text" placeholder="Ej: Facturación y cobranza"></div>
+        <div class="f-group"><label class="f-label">Área responsable</label><input id="np-area" type="text" placeholder="Ej: Finanzas"></div>
+      </div>
+      <button class="btn btn-primary" onclick="addProcess()">+ Añadir proceso</button>
+    </div>
+    <div class="section-title" style="margin:22px 0 12px">Procesos registrados (${STATE.data.processes.length})</div>
+    ${STATE.data.processes.length? STATE.data.processes.map(p=>procCardHtml(p)).join('') :
+      `<div class="card empty"><div class="empty-icon">🧭</div><div style="font-size:13px">Aún no hay procesos. Registra el primero arriba.</div></div>`}
+  </div>`;
+}
+function addProcess(){
+  const name=document.getElementById('np-name').value.trim();
+  if(!name){toast('Escribe el nombre del proceso');return;}
+  const proc={id:gid(),name,area:document.getElementById('np-area').value.trim(),diagnostic:null,phaseChecklist:{},createdAt:new Date().toISOString()};
+  STATE.data.processes.push(proc);saveData();
+  document.getElementById('np-name').value='';document.getElementById('np-area').value='';
+  toast('Proceso añadido');pageProcesos();
+}
+function delProcess(id){
+  if(!confirm('¿Eliminar este proceso y su diagnóstico?'))return;
+  deleteProcessRemote(id);
+  STATE.data.processes=STATE.data.processes.filter(p=>p.id!==id);saveData();
+  STATE.activeProc=null;goPage('procesos');
+}
+function openProcess(id){STATE.activeProc=id;STATE.quizIdx=0;goPage('diagnostico');}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PAGE: DIAGNÓSTICO
+   ═══════════════════════════════════════════════════════════════════════ */
+function pageDiagnostico(){
+  const procs=STATE.data.processes;
+  if(!STATE.activeProc && procs.length) STATE.activeProc=procs[0].id;
+  if(!procs.length){
+    root().innerHTML=`<div class="page"><div class="eyebrow">Diagnóstico</div><h1 class="page-title">Diagnóstico de madurez</h1>
+      <div class="card empty"><div class="empty-icon">📝</div><div style="font-weight:700;color:var(--navy);margin-bottom:6px">Primero registra un proceso</div>
+      <div style="font-size:12.5px;margin-bottom:14px">El diagnóstico se aplica proceso por proceso.</div>
+      <button class="btn btn-primary" onclick="goPage('procesos')">Ir a Mis Procesos</button></div></div>`;
+    return;
+  }
+  const proc=procs.find(p=>p.id===STATE.activeProc)||procs[0];
+  STATE.activeProc=proc.id;
+
+  const selectorHtml=`<select id="proc-switcher" onchange="switchProc(this.value)">
+    ${procs.map(p=>`<option value="${p.id}" ${p.id===proc.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`;
+
+  if(proc.diagnostic && proc.diagnostic.level && !proc._retake){
+    renderDiagResult(proc,selectorHtml);return;
+  }
+  renderDiagQuiz(proc,selectorHtml);
+}
+function switchProc(id){STATE.activeProc=id;STATE.quizIdx=0;goPage('diagnostico');}
+
+function renderDiagQuiz(proc,selectorHtml){
+  const idx=STATE.quizIdx;const q=QUESTIONS[idx];
+  const answers=proc._draftAnswers||(proc._draftAnswers=(proc.diagnostic?proc.diagnostic.answers.slice():new Array(QUESTIONS.length).fill(null)));
+  const answered=answers.filter(a=>a!==null).length;
+
+  root().innerHTML=`<div class="page">
+    <div class="eyebrow">Diagnóstico</div>
+    <div style="margin-bottom:10px;max-width:320px">${selectorHtml}</div>
+    <h1 class="page-title">Pregunta ${idx+1} de ${QUESTIONS.length}</h1>
+    <div class="progress-bar" style="margin-bottom:22px"><div class="progress-fill" style="width:${(answered/QUESTIONS.length)*100}%;background:var(--gold)"></div></div>
+
+    <div class="q-card">
+      <div class="q-dim">${q.dim}</div>
+      <div class="q-text">${q.text}</div>
+      <div class="opt-row">
+        ${q.opts.map((o,i)=>`<div class="opt ${answers[idx]===i+1?'sel':''}" onclick="answerQ(${idx},${i+1})">
+          <div class="opt-n">${i+1}</div><div class="opt-txt">${o}</div></div>`).join('')}
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;margin-top:18px">
+      <button class="btn btn-ghost" ${idx===0?'disabled':''} onclick="quizNav(-1)">← Anterior</button>
+      ${idx<QUESTIONS.length-1?
+        `<button class="btn btn-primary" ${answers[idx]?'':'disabled'} onclick="quizNav(1)">Siguiente →</button>`:
+        `<button class="btn btn-gold" ${answered===QUESTIONS.length?'':'disabled'} onclick="finishQuiz()">Ver resultado →</button>`}
+    </div>
+    <div style="text-align:center;margin-top:14px"><span style="font-size:11.5px;color:var(--gray-400)">${answered} de ${QUESTIONS.length} respondidas</span></div>
+  </div>`;
+}
+function answerQ(idx,val){
+  const proc=STATE.data.processes.find(p=>p.id===STATE.activeProc);
+  proc._draftAnswers[idx]=val;saveData();
+  const sel=document.getElementById('proc-switcher');
+  renderDiagQuiz(proc,sel?sel.outerHTML:'');
+}
+function quizNav(dir){STATE.quizIdx=Math.max(0,Math.min(QUESTIONS.length-1,STATE.quizIdx+dir));pageDiagnostico();}
+function finishQuiz(){
+  const proc=STATE.data.processes.find(p=>p.id===STATE.activeProc);
+  const answers=proc._draftAnswers;
+  const avg=answers.reduce((a,b)=>a+b,0)/answers.length;
+  const level=Math.max(1,Math.min(5,Math.round(avg)));
+  const pct=Math.round(((avg-1)/4)*100);
+  proc.diagnostic={answers,avg,level,pct,date:new Date().toISOString()};
+  proc._retake=false;delete proc._draftAnswers;
+  saveData();toast('Diagnóstico completado');pageDiagnostico();
+}
+function retakeDiag(){
+  const proc=STATE.data.processes.find(p=>p.id===STATE.activeProc);
+  proc._retake=true;STATE.quizIdx=0;pageDiagnostico();
+}
+
+function renderDiagResult(proc,selectorHtml){
+  const d=proc.diagnostic;const lvl=LEVELS[d.level-1];
+  const phaseChecklist=proc.phaseChecklist||(proc.phaseChecklist={});
+  root().innerHTML=`<div class="page">
+    <div class="eyebrow">Diagnóstico</div>
+    <div style="margin-bottom:10px;max-width:320px">${selectorHtml}</div>
+    <h1 class="page-title">${esc(proc.name)}</h1>
+    <div class="page-desc">${esc(proc.area||'')} · Diagnosticado el ${new Date(d.date).toLocaleDateString('es-EC')}</div>
+
+    <div class="result-hero" style="background:linear-gradient(135deg,${lvl.color},var(--navy))">
+      <div style="font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.8">Nivel de madurez MOP-X</div>
+      <div class="lvl-num">${lvl.n}<span style="font-size:24px;opacity:.7">/5</span></div>
+      <div class="lvl-name">${lvl.title}</div>
+      <div class="lvl-desc">${lvl.desc}</div>
+      <div style="margin-top:14px;font-size:12px;opacity:.85">Puntaje de madurez: ${d.pct}%</div>
+    </div>
+
+    <div class="level-bar">
+      ${LEVELS.map(l=>`<div class="level-chip ${l.n===d.level?'active':''}" style="background:${l.n===d.level?l.bg:'#fff'};border-color:${l.n===d.level?l.color:'var(--gray-200)'};color:${l.n<=d.level?l.color:'var(--gray-300)'}">
+        <div class="num">${l.n}</div><div class="lbl">${l.title.split(',')[0]}</div></div>`).join('')}
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="section-title" style="font-size:15px">📌 KPIs para este nivel</div>
+        <ul style="margin:10px 0 0 18px;font-size:12.8px;color:var(--gray-700);line-height:1.9">${lvl.kpis.map(k=>`<li>${k}</li>`).join('')}</ul>
+      </div>
+      <div class="card">
+        <div class="section-title" style="font-size:15px">🚀 Líneas de acción sugeridas</div>
+        <ul style="margin:10px 0 0 18px;font-size:12.8px;color:var(--gray-700);line-height:1.9">${lvl.acciones.map(k=>`<li>${k}</li>`).join('')}</ul>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin:22px 0 4px">Framework de intervención — 4 Fases</div>
+    <div class="page-desc" style="margin-bottom:14px">Activa el checklist de cada fase para avanzar este proceso hacia el siguiente nivel de madurez.</div>
+    ${PHASES.map(ph=>{
+      const list=phaseChecklist[ph.n]||(phaseChecklist[ph.n]=new Array(ph.items.length).fill(false));
+      const done=list.filter(Boolean).length;
+      return `<div class="card" style="border-left:5px solid ${ph.color}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div><span style="font-weight:700;color:var(--navy);font-size:14px">Fase ${ph.n} — ${ph.title}</span>
+          <div style="font-size:11.5px;color:var(--gray-500)">${ph.subtitle}</div></div>
+          <span class="badge" style="background:${done===ph.items.length?'var(--l4-l)':'var(--gray-100)'};color:${done===ph.items.length?'var(--l4)':'var(--gray-500)'}">${done}/${ph.items.length}</span>
+        </div>
+        ${ph.items.map((it,i)=>`<div class="chk-item" onclick="togglePhase('${proc.id}',${ph.n},${i})">
+          <div class="chk-box ${list[i]?'on':''}">${list[i]?'✓':''}</div><div class="chk-txt ${list[i]?'on':''}">${it}</div></div>`).join('')}
+      </div>`;
+    }).join('')}
+
+    <div style="display:flex;gap:10px;margin-top:10px">
+      <button class="btn btn-outline" onclick="goPage('flujo')">🔀 Ver / editar mapa de flujo</button>
+      <button class="btn btn-ghost" onclick="retakeDiag()">↺ Repetir diagnóstico</button>
+      <button class="btn btn-danger" onclick="delProcess('${proc.id}')">Eliminar proceso</button>
+    </div>
+  </div>`;
+}
+function togglePhase(procId,phaseN,i){
+  const proc=STATE.data.processes.find(p=>p.id===procId);
+  proc.phaseChecklist[phaseN][i]=!proc.phaseChecklist[phaseN][i];
+  saveData();pageDiagnostico();
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PAGE: DIAGRAMADOR DE FLUJOS
+   ═══════════════════════════════════════════════════════════════════════ */
+const FLOW_TYPES=[
+ {key:'manual',label:'Manual',cls:'type-manual'},
+ {key:'rpa',label:'Automatizable con RPA',cls:'type-rpa'},
+ {key:'ia',label:'Automatizable con IA',cls:'type-ia'},
+ {key:'auto',label:'Ya automatizado',cls:'type-auto'}
+];
+function flowTypeInfo(key){return FLOW_TYPES.find(t=>t.key===key)||FLOW_TYPES[0];}
+let FLOW_EDIT_ID=null;
+
+function pageFlujo(){
+  const procs=STATE.data.processes;
+  if(!STATE.activeProc && procs.length) STATE.activeProc=procs[0].id;
+  if(!procs.length){
+    root().innerHTML=`<div class="page"><div class="eyebrow">Diagramador de flujos</div><h1 class="page-title">Mapa de flujo del proceso</h1>
+      <div class="card empty"><div class="empty-icon">🔀</div><div style="font-weight:700;color:var(--navy);margin-bottom:6px">Primero registra un proceso</div>
+      <div style="font-size:12.5px;margin-bottom:14px">El mapa de flujo se construye proceso por proceso, siguiendo la Notación MOP-X de 6 elementos.</div>
+      <button class="btn btn-primary" onclick="goPage('procesos')">Ir a Mis Procesos</button></div></div>`;
+    return;
+  }
+  const proc=procs.find(p=>p.id===STATE.activeProc)||procs[0];
+  STATE.activeProc=proc.id;
+  proc.flow=proc.flow||{steps:[]};
+  FLOW_EDIT_ID=null;
+  renderFlujoPage(proc);
+}
+
+function renderFlujoPage(proc){
+  const procs=STATE.data.processes;
+  const selectorHtml=`<select id="flow-proc-switcher" onchange="switchFlowProc(this.value)">
+    ${procs.map(p=>`<option value="${p.id}" ${p.id===proc.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`;
+  const steps=proc.flow.steps;
+
+  root().innerHTML=`<div class="page">
+    <div class="eyebrow">Trabajo por proceso</div>
+    <div style="margin-bottom:10px;max-width:320px">${selectorHtml}</div>
+    <h1 class="page-title">Diagramador de flujos</h1>
+    <div class="page-desc">Mapea el \u201cas-is\u201d de <b>${esc(proc.name)}</b> siguiendo la Notación MOP-X: carril (actor), tarea, tipo de automatización, tiempo y esperas/traspasos. Este mapa alimenta directamente el diagnóstico de madurez.
+      ${proc.diagnostic&&proc.diagnostic.level?` <a href="#" onclick="event.preventDefault();goPage('diagnostico')" style="color:var(--gold);font-weight:700">→ Ver diagnóstico de este proceso</a>`:''}</div>
+
+    <div id="flow-source-img-wrap"></div>
+
+    <div class="flow-legend">
+      ${FLOW_TYPES.map(t=>`<div class="flow-legend-item"><span class="flow-legend-dot ${t.cls}"></span>${t.label}</div>`).join('')}
+      <div class="flow-legend-item"><span style="width:11px;height:11px;border:2px dashed var(--gray-400);border-radius:3px;flex-shrink:0"></span>Espera / traspaso</div>
+    </div>
+
+    <div class="card" id="flow-summary-card"></div>
+
+    <div class="section-title" style="margin-bottom:10px">Mapa visual (carriles por actor)</div>
+    <div class="card"><div class="flow-scroll" id="flow-grid-wrap"></div></div>
+
+    <div class="section-title" style="margin:22px 0 10px">${steps.length?'Pasos registrados':'Registra el primer paso'}</div>
+    <div class="card">
+      <div id="flow-step-list"></div>
+      <div style="border-top:1px solid var(--gray-100);margin-top:${steps.length?'14px':'0'};padding-top:${steps.length?'16px':'0'}">
+        <div style="font-weight:700;color:var(--navy);font-size:13px;margin-bottom:12px" id="flow-form-title">+ Añadir paso</div>
+        <div class="f-row">
+          <div class="f-group"><label class="f-label">Carril (actor / área)</label><input id="fs-actor" type="text" list="fs-actor-list" placeholder="Ej: Finanzas"></div>
+          <div class="f-group"><label class="f-label">Tarea (verbo + objeto)</label><input id="fs-task" type="text" placeholder="Ej: Validar factura"></div>
+        </div>
+        <datalist id="fs-actor-list">${[...new Set(steps.map(s=>s.actor))].map(a=>`<option value="${esc(a)}">`).join('')}</datalist>
+        <div class="f-row">
+          <div class="f-group"><label class="f-label">Tipo de automatización</label>
+            <select id="fs-type">${FLOW_TYPES.map(t=>`<option value="${t.key}">${t.label}</option>`).join('')}</select>
+          </div>
+          <div class="f-group"><label class="f-label">Tiempo estimado (minutos)</label><input id="fs-minutes" type="text" placeholder="Ej: 15"></div>
+        </div>
+        <div class="f-group"><label class="f-label">Sistema / dato (opcional)</label><input id="fs-system" type="text" placeholder="Ej: ERP, Excel, correo"></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+          <input type="checkbox" id="fs-wait" style="width:16px;height:16px"> <label for="fs-wait" style="font-size:12.5px;color:var(--gray-600)">Este paso es una espera o un traspaso entre áreas/sistemas</label>
+        </div>
+        <div class="f-group"><label class="f-label">Observaciones (opcional)</label><input id="fs-notes" type="text" placeholder="Ej: Sin trazabilidad, se hace por WhatsApp"></div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-primary" id="flow-save-btn" onclick="saveFlowStep()">+ Añadir paso</button>
+          <button class="btn btn-ghost hidden" id="flow-cancel-btn" onclick="cancelFlowEdit()">Cancelar edición</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  renderFlowGrid(proc);renderFlowStepList(proc);renderFlowSummary(proc);renderFlowSourceImage(proc);
+}
+async function renderFlowSourceImage(proc){
+  const wrap=document.getElementById('flow-source-img-wrap');
+  if(!wrap) return;
+  if(!proc.sourceImagePath){ wrap.innerHTML=''; return; }
+  wrap.innerHTML=`<div class="source-img-wrap"><div class="source-img-caption">Cargando imagen original…</div></div>`;
+  try{
+    const { data, error } = await sb.storage.from('process-images').createSignedUrl(proc.sourceImagePath, 3600);
+    if(error) throw error;
+    wrap.innerHTML=`<div class="source-img-wrap">
+      <img src="${data.signedUrl}" alt="Imagen original del proceso">
+      <div class="source-img-caption">📎 Imagen original subida para este proceso.
+        ${proc.importStatus==='pending_ai'?' <span class="status-badge status-pending">⏳ Pendiente de interpretación con IA</span> — por ahora, usa esta imagen como referencia para mapear los pasos manualmente abajo.':''}
+      </div>
+    </div>`;
+  }catch(e){
+    wrap.innerHTML=`<div class="source-img-wrap"><div class="source-img-caption">No se pudo cargar la imagen original (${esc(e.message||'error')}).</div></div>`;
+  }
+}
+function switchFlowProc(id){STATE.activeProc=id;goPage('flujo');}
+
+function renderFlowGrid(proc){
+  const steps=proc.flow.steps;
+  const wrap=document.getElementById('flow-grid-wrap');
+  if(!steps.length){wrap.innerHTML=`<div class="empty" style="padding:30px"><div class="empty-icon">🔀</div><div style="font-size:12.5px">Añade el primer paso abajo para empezar a construir el mapa.</div></div>`;return;}
+  const actors=[...new Set(steps.map(s=>s.actor||'Sin asignar'))];
+  const cols=steps.length;
+  let html=`<div class="flow-grid" style="grid-template-columns:140px repeat(${cols},118px)">`;
+  html+=`<div></div>`;
+  steps.forEach((s,i)=>{html+=`<div class="flow-col-head">Paso ${i+1}</div>`;});
+  actors.forEach(actor=>{
+    html+=`<div class="flow-actor-label">${esc(actor)}</div>`;
+    steps.forEach(s=>{
+      const a=s.actor||'Sin asignar';
+      if(a===actor){
+        const t=flowTypeInfo(s.type);
+        html+=`<div class="flow-cell"><div class="flow-chip ${t.cls} ${s.isWait?'wait':''}" onclick="editFlowStep('${s.id}')">
+          <div class="fc-task">${esc(s.task)}</div>
+          <div class="fc-meta">${s.minutes?esc(s.minutes)+' min · ':''}${t.label}${s.isWait?' · Espera':''}</div>
+        </div></div>`;
+      } else {
+        html+=`<div class="flow-cell"><div class="flow-empty-cell"></div></div>`;
+      }
+    });
+  });
+  html+=`</div>`;
+  wrap.innerHTML=html;
+}
+
+function renderFlowStepList(proc){
+  const steps=proc.flow.steps;
+  const el=document.getElementById('flow-step-list');
+  if(!steps.length){el.innerHTML='';return;}
+  el.innerHTML=steps.map((s,i)=>{
+    const t=flowTypeInfo(s.type);
+    return `<div class="flow-step-row">
+      <span class="flow-step-badge ${t.cls}"></span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12.8px;font-weight:700;color:var(--navy)">${i+1}. ${esc(s.task)} <span style="font-weight:500;color:var(--gray-400)">— ${esc(s.actor||'Sin asignar')}</span></div>
+        <div style="font-size:11px;color:var(--gray-500)">${t.label}${s.minutes?' · '+esc(s.minutes)+' min':''}${s.isWait?' · ⏳ Espera/traspaso':''}${s.system?' · '+esc(s.system):''}</div>
+      </div>
+      <div class="flow-step-controls">
+        <button class="icon-btn" title="Subir" ${i===0?'disabled':''} onclick="moveFlowStep('${s.id}',-1)">↑</button>
+        <button class="icon-btn" title="Bajar" ${i===steps.length-1?'disabled':''} onclick="moveFlowStep('${s.id}',1)">↓</button>
+        <button class="icon-btn" title="Editar" onclick="editFlowStep('${s.id}')">✎</button>
+        <button class="icon-btn" title="Eliminar" onclick="deleteFlowStep('${s.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderFlowSummary(proc){
+  const steps=proc.flow.steps;
+  const card=document.getElementById('flow-summary-card');
+  if(!steps.length){card.innerHTML=`<div style="font-size:12.5px;color:var(--gray-400)">Sin pasos registrados todavía. El resumen aparecerá aquí en cuanto añadas el primer paso.</div>`;return;}
+  const totalMin=steps.reduce((a,s)=>a+(parseFloat(s.minutes)||0),0);
+  const waits=steps.filter(s=>s.isWait).length;
+  const counts={};FLOW_TYPES.forEach(t=>counts[t.key]=0);
+  steps.forEach(s=>counts[s.type]=(counts[s.type]||0)+1);
+  const manualPct=Math.round((counts.manual/steps.length)*100);
+
+  let insight;
+  if(manualPct>=60) insight=`El ${manualPct}% de los pasos son manuales. Este proceso está en Nivel 1–2 de madurez: prioriza Lean/Kaizen (Fase 2) antes de automatizar.`;
+  else if(waits>=3) insight=`Hay ${waits} esperas o traspasos registrados. Antes de escalar IA, revisa la integración de sistemas y elimina traspasos manuales (Fase 2).`;
+  else if((counts.ia+counts.rpa)>=Math.ceil(steps.length*0.4)) insight=`Buena proporción de pasos automatizables con RPA/IA. Este proceso es candidato a la Fase 3 del framework: integración de IA y automatización.`;
+  else insight=`Sigue registrando pasos hasta cubrir el proceso completo, desde el evento que lo dispara hasta el que lo cierra.`;
+
+  card.innerHTML=`
+    <div class="grid3" style="margin-bottom:16px">
+      <div style="text-align:center"><div style="font-family:var(--font-display);font-size:26px;font-weight:700;color:var(--navy)">${steps.length}</div><div style="font-size:10.5px;color:var(--gray-500);font-weight:600">Pasos mapeados</div></div>
+      <div style="text-align:center"><div style="font-family:var(--font-display);font-size:26px;font-weight:700;color:var(--navy)">${totalMin||'—'}</div><div style="font-size:10.5px;color:var(--gray-500);font-weight:600">Minutos totales</div></div>
+      <div style="text-align:center"><div style="font-family:var(--font-display);font-size:26px;font-weight:700;color:${waits?'var(--l1)':'var(--l4)'}">${waits}</div><div style="font-size:10.5px;color:var(--gray-500);font-weight:600">Esperas / traspasos</div></div>
+    </div>
+    ${FLOW_TYPES.map(t=>{
+      const pct=Math.round((counts[t.key]/steps.length)*100);
+      return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div style="width:170px;font-size:11.5px;font-weight:600;color:var(--gray-600)">${t.label}</div>
+        <div style="flex:1;background:var(--gray-100);border-radius:100px;height:10px;overflow:hidden"><div class="${t.cls}" style="height:100%;width:${pct}%;border-radius:100px"></div></div>
+        <div style="width:38px;text-align:right;font-size:11.5px;font-weight:700;color:var(--navy)">${pct}%</div>
+      </div>`;
+    }).join('')}
+    <div style="margin-top:14px;padding:12px 14px;background:var(--gold-l);border-radius:var(--radius-sm);font-size:12.5px;color:var(--gray-700);line-height:1.5">💡 ${insight}</div>
+  `;
+}
+
+function saveFlowStep(){
+  const proc=STATE.data.processes.find(p=>p.id===STATE.activeProc);
+  const task=document.getElementById('fs-task').value.trim();
+  const actor=document.getElementById('fs-actor').value.trim();
+  if(!task){toast('Escribe la tarea de este paso');return;}
+  if(!actor){toast('Escribe el carril / actor de este paso');return;}
+  const data={actor,task,type:document.getElementById('fs-type').value,minutes:document.getElementById('fs-minutes').value.trim(),
+    system:document.getElementById('fs-system').value.trim(),isWait:document.getElementById('fs-wait').checked,
+    notes:document.getElementById('fs-notes').value.trim()};
+  if(FLOW_EDIT_ID){
+    const s=proc.flow.steps.find(x=>x.id===FLOW_EDIT_ID);
+    Object.assign(s,data);
+    toast('Paso actualizado');
+  } else {
+    proc.flow.steps.push({id:gid(),...data});
+    toast('Paso añadido');
+  }
+  saveData();FLOW_EDIT_ID=null;renderFlujoPage(proc);
+}
+function editFlowStep(id){
+  const proc=STATE.data.processes.find(p=>p.id===STATE.activeProc);
+  const s=proc.flow.steps.find(x=>x.id===id);
+  if(!s)return;
+  FLOW_EDIT_ID=id;
+  document.getElementById('fs-actor').value=s.actor||'';
+  document.getElementById('fs-task').value=s.task||'';
+  document.getElementById('fs-type').value=s.type||'manual';
+  document.getElementById('fs-minutes').value=s.minutes||'';
+  document.getElementById('fs-system').value=s.system||'';
+  document.getElementById('fs-wait').checked=!!s.isWait;
+  document.getElementById('fs-notes').value=s.notes||'';
+  document.getElementById('flow-form-title').textContent='✎ Editando paso';
+  document.getElementById('flow-save-btn').textContent='Guardar cambios';
+  document.getElementById('flow-cancel-btn').classList.remove('hidden');
+  const titleEl=document.getElementById('flow-form-title');
+  if(titleEl.scrollIntoView) titleEl.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function cancelFlowEdit(){
+  const proc=STATE.data.processes.find(p=>p.id===STATE.activeProc);
+  FLOW_EDIT_ID=null;renderFlujoPage(proc);
+}
+function deleteFlowStep(id){
+  const proc=STATE.data.processes.find(p=>p.id===STATE.activeProc);
+  proc.flow.steps=proc.flow.steps.filter(s=>s.id!==id);
+  saveData();FLOW_EDIT_ID=null;renderFlujoPage(proc);
+}
+function moveFlowStep(id,dir){
+  const proc=STATE.data.processes.find(p=>p.id===STATE.activeProc);
+  const arr=proc.flow.steps;
+  const i=arr.findIndex(s=>s.id===id);
+  const j=i+dir;
+  if(j<0||j>=arr.length)return;
+  [arr[i],arr[j]]=[arr[j],arr[i]];
+  saveData();renderFlujoPage(proc);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PAGE: ARQUITECTURA TECNOLÓGICA
+   ═══════════════════════════════════════════════════════════════════════ */
+function pageArquitectura(){
+  STATE.data.toolStack=STATE.data.toolStack||{};
+  root().innerHTML=`<div class="page">
+    <div class="eyebrow">Ejecución</div>
+    <h1 class="page-title">Arquitectura tecnológica</h1>
+    <div class="page-desc">Marca las herramientas que tu empresa ya usa (o planea usar) en cada uno de los 6 bloques del MOP-X 2.0. Esto te da el mapa de tu stack actual frente al modelo completo.</div>
+    <div class="tool-cat-tabs">${TOOL_CATS.map(c=>`<div class="tool-tab ${STATE.toolTab===c.key?'active':''}" onclick="setToolTab('${c.key}')">${c.icon} ${c.label}</div>`).join('')}</div>
+    <div class="card"><div class="tool-grid" id="tool-grid"></div></div>
+    <div class="section-title" style="margin:22px 0 10px">Resumen de tu stack seleccionado</div>
+    <div id="stack-summary"></div>
+  </div>`;
+  renderToolGrid();renderStackSummary();
+}
+function setToolTab(key){STATE.toolTab=key;renderToolGrid();}
+function renderToolGrid(){
+  const cat=TOOL_CATS.find(c=>c.key===STATE.toolTab);
+  const sel=STATE.data.toolStack[cat.key]||[];
+  document.getElementById('tool-grid').innerHTML=cat.items.map(t=>{
+    const isSel=sel.includes(t);
+    return `<div class="tool-item ${isSel?'sel':''}" onclick="toggleTool('${cat.key}','${t.replace(/'/g,"\\'")}')">
+      <span>${isSel?'✅':'⬜'}</span>${t}</div>`;
+  }).join('');
+}
+function toggleTool(cat,tool){
+  const stack=STATE.data.toolStack;
+  if(!stack[cat])stack[cat]=[];
+  const arr=stack[cat];const i=arr.indexOf(tool);
+  if(i>-1)arr.splice(i,1);else arr.push(tool);
+  saveData();renderToolGrid();renderStackSummary();
+}
+function renderStackSummary(){
+  const entries=Object.entries(STATE.data.toolStack||{}).filter(([,v])=>v&&v.length);
+  const el=document.getElementById('stack-summary');
+  if(!entries.length){el.innerHTML=`<div class="card empty" style="padding:24px"><div style="font-size:12.5px">Aún no has seleccionado herramientas.</div></div>`;return;}
+  el.innerHTML=`<div class="grid2">`+entries.map(([key,tools])=>{
+    const cat=TOOL_CATS.find(c=>c.key===key);
+    return `<div class="card card-tight"><div style="font-weight:700;font-size:12.5px;color:var(--navy);margin-bottom:6px">${cat.icon} ${cat.label} (${tools.length})</div>
+      <div style="font-size:12px;color:var(--gray-600);line-height:1.7">${tools.map(t=>'· '+esc(t)).join('<br>')}</div></div>`;
+  }).join('')+`</div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PAGE: ROADMAP 90 DÍAS
+   ═══════════════════════════════════════════════════════════════════════ */
+function pageRoadmap(){
+  STATE.data.roadmap=STATE.data.roadmap||{};
+  const rm=STATE.data.roadmap;
+  root().innerHTML=`<div class="page">
+    <div class="eyebrow">Ejecución</div>
+    <h1 class="page-title">Ruta de implementación — 90 días</h1>
+    <div class="page-desc">La ruta mínima viable para activar el MOP-X 2.0 sobre tu primer proceso crítico. No esperes a tenerlo todo perfecto: el primer ciclo de 90 días da más información que meses de levantamiento sin intervención.</div>
+    ${ROADMAP.map(block=>{
+      const list=rm[block.range]||(rm[block.range]=new Array(block.items.length).fill(false));
+      const done=list.filter(Boolean).length;
+      return `<div class="card" style="border-left:5px solid ${block.color}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div><span class="badge" style="background:${block.color};color:#fff">${block.range}</span>
+            <div style="font-weight:700;color:var(--navy);font-size:14.5px;margin-top:8px">${block.title}</div></div>
+          <span class="badge" style="background:${done===block.items.length?'var(--l4-l)':'var(--gray-100)'};color:${done===block.items.length?'var(--l4)':'var(--gray-500)'}">${done}/${block.items.length}</span>
+        </div>
+        ${block.items.map((it,i)=>`<div class="chk-item" onclick="toggleRoadmap('${block.range}',${i})">
+          <div class="chk-box ${list[i]?'on':''}">${list[i]?'✓':''}</div><div class="chk-txt ${list[i]?'on':''}">${it}</div></div>`).join('')}
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+function toggleRoadmap(range,i){
+  STATE.data.roadmap[range][i]=!STATE.data.roadmap[range][i];
+  saveData();pageRoadmap();
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PAGE: REPORTE EJECUTIVO
+   ═══════════════════════════════════════════════════════════════════════ */
+function pageReporte(){
+  const procs=STATE.data.processes;
+  const withScore=procs.filter(p=>p.diagnostic&&p.diagnostic.level);
+  const dist=[1,2,3,4,5].map(n=>withScore.filter(p=>p.diagnostic.level===n).length);
+  const maxDist=Math.max(1,...dist);
+  const stackCount=Object.values(STATE.data.toolStack||{}).flat().length;
+
+  root().innerHTML=`<div class="page">
+    <div class="eyebrow no-print">Ejecución</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start" class="no-print">
+      <h1 class="page-title">Reporte ejecutivo MOP-X 2.0</h1>
+      <button class="btn btn-outline btn-sm" onclick="window.print()">🖨️ Imprimir / Exportar PDF</button>
+    </div>
+    <div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--navy);margin-bottom:2px">${esc(STATE.data.profile.name)}</div>
+    <div class="page-desc">Diagnóstico de madurez de optimización de procesos con IA · Generado el ${new Date().toLocaleDateString('es-EC')} · Modelo MOP-X 2.0 de Juan Carlos Alzate García</div>
+
+    <div class="grid3">
+      <div class="card card-tight" style="text-align:center"><div style="font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--navy)">${procs.length}</div><div style="font-size:11px;color:var(--gray-500);font-weight:600">Procesos evaluados</div></div>
+      <div class="card card-tight" style="text-align:center"><div style="font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--navy)">${withScore.length?Math.round(withScore.reduce((a,p)=>a+p.diagnostic.level,0)/withScore.length*10)/10:'—'}</div><div style="font-size:11px;color:var(--gray-500);font-weight:600">Nivel promedio</div></div>
+      <div class="card card-tight" style="text-align:center"><div style="font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--navy)">${stackCount}</div><div style="font-size:11px;color:var(--gray-500);font-weight:600">Herramientas en el stack</div></div>
+    </div>
+
+    <div class="section-title" style="margin:20px 0 12px">Distribución de procesos por nivel</div>
+    <div class="card">
+      ${LEVELS.map((l,i)=>`<div style="display:flex;align-items:center;gap:12px;margin-bottom:${i<4?'12px':'0'}">
+        <div style="width:120px;font-size:12px;font-weight:600;color:var(--gray-600)">Nivel ${l.n}</div>
+        <div style="flex:1;background:var(--gray-100);border-radius:100px;height:16px;overflow:hidden">
+          <div style="height:100%;width:${(dist[i]/maxDist)*100}%;background:${l.color};border-radius:100px"></div>
+        </div>
+        <div style="width:24px;text-align:right;font-size:12.5px;font-weight:700;color:var(--navy)">${dist[i]}</div>
+      </div>`).join('')}
+    </div>
+
+    <div class="section-title" style="margin:20px 0 12px">Detalle por proceso</div>
+    <table class="tbl">
+      <thead><tr><th>Proceso</th><th>Área</th><th>Nivel</th><th>Puntaje</th><th>Fases activas</th></tr></thead>
+      <tbody>
+        ${procs.length? procs.map(p=>{
+          const d=p.diagnostic;
+          const phasesDone=d?Object.values(p.phaseChecklist||{}).filter(arr=>arr.every(Boolean)).length:0;
+          return `<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.area||'—')}</td>
+            <td>${d?`<span class="badge" style="background:${LEVELS[d.level-1].bg};color:${LEVELS[d.level-1].color}">Nivel ${d.level}</span>`:'Sin diagnosticar'}</td>
+            <td>${d?d.pct+'%':'—'}</td><td>${phasesDone}/4 fases completas</td></tr>`;
+        }).join('') : `<tr><td colspan="5" style="text-align:center;color:var(--gray-400);padding:20px">Sin procesos registrados</td></tr>`}
+      </tbody>
+    </table>
+
+    <div class="section-title" style="margin:20px 0 12px">Stack tecnológico declarado</div>
+    <div class="grid2">
+      ${TOOL_CATS.map(c=>{const sel=(STATE.data.toolStack||{})[c.key]||[];
+        return `<div class="card card-tight"><div style="font-weight:700;font-size:12.5px;color:var(--navy);margin-bottom:5px">${c.icon} ${c.label}</div>
+        <div style="font-size:12px;color:var(--gray-600)">${sel.length?sel.map(t=>'· '+esc(t)).join('<br>'):'<span style="color:var(--gray-300)">Sin herramientas seleccionadas</span>'}</div></div>`;
+      }).join('')}
+    </div>
+
+    <div class="card" style="margin-top:22px;background:var(--navy);color:#fff">
+      <div style="font-weight:700;font-size:13.5px;margin-bottom:6px">Sobre este modelo</div>
+      <div style="font-size:12px;opacity:.85;line-height:1.6">MOP-X 2.0 — Modelo de Optimización de Procesos con Inteligencia Artificial. Tercera pieza de la trilogía de Transformación ExO junto al MIEDE X 2.0 (organización) y el MRPD 2.0 (persona). © 2026 Juan Carlos Alzate García.</div>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PAGE: PERFIL
+   ═══════════════════════════════════════════════════════════════════════ */
+function pagePerfil(){
+  const pr=STATE.data.profile;
+  root().innerHTML=`<div class="page">
+    <div class="eyebrow">Cuenta</div>
+    <h1 class="page-title">Perfil de la empresa</h1>
+    <div class="card">
+      <div class="f-group"><label class="f-label">Correo de la cuenta</label><input type="text" value="${esc(pr.email||'')}" disabled style="background:var(--gray-50);color:var(--gray-400)"></div>
+      <div class="f-row">
+        <div class="f-group"><label class="f-label">Nombre de la empresa</label><input id="pf-name" type="text" value="${esc(pr.name)}"></div>
+        <div class="f-group"><label class="f-label">Sector</label><input id="pf-sector" type="text" value="${esc(pr.sector||'')}"></div>
+      </div>
+      <div class="f-row">
+        <div class="f-group"><label class="f-label">País</label><input id="pf-country" type="text" value="${esc(pr.country||'')}"></div>
+        <div class="f-group"><label class="f-label">Cargo del líder</label><input id="pf-role" type="text" value="${esc(pr.role||'')}"></div>
+      </div>
+      <div class="f-group"><label class="f-label">Nombre del líder responsable</label><input id="pf-cname" type="text" value="${esc(pr.contactName||'')}"></div>
+      <button class="btn btn-primary" onclick="saveProfile()">Guardar cambios</button>
+    </div>
+    <div class="card" style="border-color:var(--l1-l)">
+      <div style="font-weight:700;color:var(--l1);font-size:13px;margin-bottom:6px">Zona de riesgo</div>
+      <div style="font-size:12.5px;color:var(--gray-600);margin-bottom:12px">Esto elimina permanentemente esta empresa y todos sus procesos de tu proyecto de Supabase. Tu cuenta de acceso no se elimina.</div>
+      <button class="btn btn-danger" onclick="deleteCompany()">Eliminar esta empresa</button>
+    </div>
+  </div>`;
+}
+function saveProfile(){
+  const pr=STATE.data.profile;
+  pr.name=document.getElementById('pf-name').value.trim()||pr.name;
+  pr.sector=document.getElementById('pf-sector').value.trim();
+  pr.country=document.getElementById('pf-country').value.trim();
+  pr.role=document.getElementById('pf-role').value.trim();
+  pr.contactName=document.getElementById('pf-cname').value.trim();
+  saveData();
+  document.getElementById('sb-user-name').textContent=pr.contactName||'Líder';
+  document.getElementById('sb-user-co').textContent=pr.name;
+  toast('Perfil actualizado');
+}
+async function deleteCompany(){
+  if(!confirm('Esta acción no se puede deshacer. ¿Eliminar la empresa y todos sus datos de Supabase?'))return;
+  await deleteCompanyRemote();
+  await handleSignOut();
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PAGE: IMPORTAR PROCESOS POR IMAGEN
+   ═══════════════════════════════════════════════════════════════════════ */
+const ALLOWED_IMAGE_TYPES = ['image/png','image/jpeg','image/webp'];
+const MAX_IMPORT_FILES = 6;
+
+function pageImportar(){
+  root().innerHTML=`<div class="page">
+    <div class="eyebrow">Trabajo por proceso</div>
+    <h1 class="page-title">Importar procesos por imagen</h1>
+    <div class="page-desc">Sube fotos o capturas de diagramas de proceso que ya existan en tu empresa (pizarras, PowerPoint exportado, diagramas de otras herramientas). Cada imagen se guarda de forma privada en tu proyecto de Supabase y se convierte en un nuevo proceso listo para documentar.</div>
+
+    <div class="coming-soon-card">
+      <div class="coming-soon-badge">🤖 Próximamente</div>
+      <div style="font-weight:700;color:var(--navy);font-size:13.5px;margin-bottom:6px">Interpretación automática con IA (Claude Vision)</div>
+      <div style="font-size:12.5px;color:var(--gray-700);line-height:1.6">
+        Hoy, la imagen queda guardada junto al proceso como referencia para que la mapees manualmente en el Diagramador de Flujos.
+        En la siguiente fase, una función segura del lado del servidor (Supabase Edge Function) enviará la imagen a Claude, que
+        leerá el diagrama y propondrá automáticamente los pasos, actores y tipo de automatización — tú solo los revisas y ajustas.
+        El código de esa función y cómo activarla están documentados en <code>SUPABASE_SETUP.md</code>, sección "Fase 2: Interpretación de imágenes con IA".
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-bottom:10px">Subir imágenes</div>
+    <div class="dropzone" id="import-dropzone" onclick="document.getElementById('import-file-input').click()">
+      <div style="font-size:30px;margin-bottom:8px">🖼️</div>
+      <div style="font-weight:700;color:var(--navy);font-size:13.5px;margin-bottom:4px">Haz clic para elegir imágenes, o arrástralas aquí</div>
+      <div style="font-size:11.5px;color:var(--gray-400)">Formatos permitidos: PNG, JPG y WEBP · hasta ${MAX_IMPORT_FILES} imágenes a la vez · puedes analizar varios procesos de una sola vez</div>
+      <input type="file" id="import-file-input" accept="image/png,image/jpeg,image/webp" multiple style="display:none" onchange="handleImportFiles(this.files)">
+    </div>
+
+    <div id="import-queue-wrap" style="margin-top:18px"></div>
+  </div>`;
+  setupDropzone();
+  renderImportQueue();
+}
+
+function setupDropzone(){
+  const dz=document.getElementById('import-dropzone');
+  ['dragenter','dragover'].forEach(evt=>dz.addEventListener(evt,e=>{e.preventDefault();dz.classList.add('drag');}));
+  ['dragleave','drop'].forEach(evt=>dz.addEventListener(evt,e=>{e.preventDefault();dz.classList.remove('drag');}));
+  dz.addEventListener('drop',e=>{ if(e.dataTransfer.files.length) handleImportFiles(e.dataTransfer.files); });
+}
+
+function handleImportFiles(fileList){
+  const files=Array.from(fileList);
+  const room = MAX_IMPORT_FILES - STATE.importQueue.length;
+  if(room<=0){ toast(`Ya tienes ${MAX_IMPORT_FILES} imágenes en la cola. Impórtalas antes de agregar más.`); return; }
+  let skipped=0;
+  files.slice(0,room).forEach(file=>{
+    if(!ALLOWED_IMAGE_TYPES.includes(file.type)){ skipped++; return; }
+    const baseName = file.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').trim();
+    STATE.importQueue.push({
+      localId: gid(), file, previewUrl: URL.createObjectURL(file),
+      name: baseName.charAt(0).toUpperCase()+baseName.slice(1) || 'Proceso importado',
+      area: ''
+    });
+  });
+  if(skipped) toast(`${skipped} archivo(s) ignorado(s): solo se permiten PNG, JPG o WEBP`);
+  document.getElementById('import-file-input').value='';
+  renderImportQueue();
+}
+
+function renderImportQueue(){
+  const wrap=document.getElementById('import-queue-wrap');
+  if(!wrap) return;
+  if(!STATE.importQueue.length){ wrap.innerHTML=''; return; }
+  wrap.innerHTML=`
+    <div class="section-title" style="margin-bottom:10px">Cola de importación (${STATE.importQueue.length})</div>
+    ${STATE.importQueue.map(item=>`
+      <div class="import-queue-item">
+        <img class="import-thumb" src="${item.previewUrl}" alt="">
+        <div class="import-fields">
+          <input type="text" value="${esc(item.name)}" placeholder="Nombre del proceso" oninput="updateImportItem('${item.localId}','name',this.value)">
+          <input type="text" value="${esc(item.area)}" placeholder="Área (opcional)" oninput="updateImportItem('${item.localId}','area',this.value)">
+        </div>
+        <button class="icon-btn" title="Quitar" onclick="removeImportItem('${item.localId}')">✕</button>
+      </div>`).join('')}
+    <div style="display:flex;gap:10px;margin-top:6px">
+      <button class="btn btn-primary" id="import-submit-btn" onclick="submitImportQueue()">⬆ Importar ${STATE.importQueue.length} proceso(s)</button>
+      <button class="btn btn-ghost" onclick="clearImportQueue()">Vaciar cola</button>
+    </div>`;
+}
+function updateImportItem(localId,field,value){
+  const item=STATE.importQueue.find(i=>i.localId===localId);
+  if(item) item[field]=value;
+}
+function removeImportItem(localId){
+  STATE.importQueue=STATE.importQueue.filter(i=>i.localId!==localId);
+  renderImportQueue();
+}
+function clearImportQueue(){
+  STATE.importQueue=[];
+  renderImportQueue();
+}
+
+async function submitImportQueue(){
+  if(!STATE.importQueue.length) return;
+  const btn=document.getElementById('import-submit-btn');
+  if(btn){ btn.disabled=true; btn.textContent='Subiendo…'; }
+  const uid=STATE.session.user.id;
+  let okCount=0, failCount=0, firstNewId=null;
+
+  for(const item of STATE.importQueue){
+    const safeName = item.file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+    const path = `${uid}/${gid()}-${safeName}`;
+    try{
+      const { error: upErr } = await sb.storage.from('process-images').upload(path, item.file, { contentType:item.file.type, upsert:false });
+      if(upErr) throw upErr;
+      const newProc = {
+        id: gid(), name: item.name||'Proceso importado', area: item.area||'',
+        diagnostic:null, phaseChecklist:{}, flow:{steps:[]},
+        importStatus:'pending_ai', sourceImagePath:path, createdAt:new Date().toISOString()
+      };
+      STATE.data.processes.push(newProc);
+      if(!firstNewId) firstNewId=newProc.id;
+      okCount++;
+    }catch(e){
+      safeLog('error', e); failCount++;
+    }
+  }
+  await saveData();
+  STATE.importQueue.forEach(i=>URL.revokeObjectURL(i.previewUrl));
+  STATE.importQueue=[];
+  if(btn){ btn.disabled=false; }
+
+  if(okCount) toast(`${okCount} proceso(s) importado(s)${failCount?`, ${failCount} con error`:''}`);
+  else toast('No se pudo importar ninguna imagen');
+
+  if(firstNewId){ STATE.activeProc=firstNewId; goPage('flujo'); }
+  else pageImportar();
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PAGE: OPORTUNIDADES DE MEJORA (multi-proceso)
+   ═══════════════════════════════════════════════════════════════════════ */
+function computeProcessInsight(p){
+  const steps=(p.flow&&p.flow.steps)||[];
+  const hasFlow = steps.length>0;
+  const manualPct = hasFlow ? Math.round((steps.filter(s=>s.type==='manual').length/steps.length)*100) : null;
+  const waits = hasFlow ? steps.filter(s=>s.isWait).length : 0;
+  const level = p.diagnostic&&p.diagnostic.level ? p.diagnostic.level : null;
+  let score = 0;
+  score += level ? (5-level)*20 : 40;
+  score += manualPct!==null ? manualPct*0.5 : 20;
+  score += waits*8;
+  let action;
+  if(!p.diagnostic && !hasFlow) action='Registra el mapa de flujo y completa el diagnóstico para poder priorizar este proceso.';
+  else if(level) action=(LEVELS[level-1].acciones[0]);
+  else if(manualPct!==null && manualPct>=60) action='Prioriza Lean/Kaizen (Fase 2) antes de automatizar: la mayoría de los pasos son manuales.';
+  else action='Completa el diagnóstico de madurez para obtener una recomendación específica.';
+  return { manualPct, waits, level, score: Math.round(score), action, hasFlow };
+}
+
+function pageMejoras(){
+  const procs=STATE.data.processes;
+  if(!procs.length){
+    root().innerHTML=`<div class="page"><div class="eyebrow">Análisis</div><h1 class="page-title">Oportunidades de mejora</h1>
+      <div class="card empty"><div class="empty-icon">💡</div><div style="font-weight:700;color:var(--navy);margin-bottom:6px">Aún no hay procesos para analizar</div>
+      <div style="font-size:12.5px;margin-bottom:14px">Registra procesos y sus mapas de flujo para ver aquí dónde priorizar la mejora.</div>
+      <button class="btn btn-primary" onclick="goPage('procesos')">Ir a Mis Procesos</button></div></div>`;
+    return;
+  }
+  const ranked = procs.map(p=>({p, insight: computeProcessInsight(p)})).sort((a,b)=>b.insight.score-a.insight.score);
+  const maxManual = Math.max(1, ...ranked.map(r=>r.insight.manualPct||0));
+
+  root().innerHTML=`<div class="page">
+    <div class="eyebrow">Análisis</div>
+    <h1 class="page-title">Oportunidades de mejora</h1>
+    <div class="page-desc">Compara todos tus procesos a la vez y ve cuáles necesitan atención primero. El orden combina el nivel de madurez, el % de pasos manuales y el número de esperas/traspasos de cada proceso.</div>
+
+    <div class="card">
+      <div class="section-title" style="font-size:15px;margin-bottom:14px">Comparativa: % de pasos manuales por proceso</div>
+      ${ranked.map(({p,insight})=>`
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="width:170px;font-size:11.5px;font-weight:600;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.name)}</div>
+          <div style="flex:1;background:var(--gray-100);border-radius:100px;height:10px;overflow:hidden">
+            <div style="height:100%;width:${insight.manualPct!==null?(insight.manualPct/maxManual)*100:0}%;background:var(--l1);border-radius:100px"></div>
+          </div>
+          <div style="width:44px;text-align:right;font-size:11.5px;font-weight:700;color:var(--navy)">${insight.manualPct!==null?insight.manualPct+'%':'—'}</div>
+        </div>`).join('')}
+    </div>
+
+    <div class="section-title" style="margin:22px 0 12px">Ranking de prioridad</div>
+    ${ranked.map(({p,insight}, i)=>`
+      <div class="mejora-card">
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <div class="mejora-rank">${i+1}</div>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+              <div style="font-weight:700;font-size:14.5px;color:var(--navy)">${esc(p.name)}</div>
+              ${insight.level?`<span class="badge" style="background:${LEVELS[insight.level-1].bg};color:${LEVELS[insight.level-1].color}">Nivel ${insight.level}</span>`:'<span class="badge" style="background:var(--gray-100);color:var(--gray-500)">Sin diagnóstico</span>'}
+            </div>
+            <div style="font-size:11.5px;color:var(--gray-500);margin:2px 0 8px">
+              ${insight.hasFlow?`${insight.manualPct}% manual · ${insight.waits} espera(s)/traspaso(s)`:'Sin mapa de flujo registrado todavía'}
+            </div>
+            <div style="font-size:12.5px;color:var(--gray-700);background:var(--gray-50);border-radius:var(--radius-sm);padding:10px 12px;line-height:1.5">💡 ${insight.action}</div>
+            <div style="display:flex;gap:8px;margin-top:10px">
+              <button class="btn btn-ghost btn-sm" onclick="STATE.activeProc='${p.id}';goPage('flujo')">🔀 Ver flujo</button>
+              <button class="btn btn-ghost btn-sm" onclick="STATE.activeProc='${p.id}';goPage('diagnostico')">📝 Ver diagnóstico</button>
+            </div>
+          </div>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   NAVEGACIÓN Y ROUTER
+   ═══════════════════════════════════════════════════════════════════════ */
+const NAV=[
+ {sec:'General',items:[['dashboard','📊','Panel general'],['mapa','🗺️','Mapa de madurez']]},
+ {sec:'Trabajo por proceso',items:[['procesos','🧭','Mis procesos'],['diagnostico','📝','Diagnóstico'],['flujo','🔀','Diagramador de flujos'],['importar','🖼️','Importar por imagen']]},
+ {sec:'Análisis',items:[['mejoras','💡','Oportunidades de mejora']]},
+ {sec:'Ejecución',items:[['arquitectura','🏗️','Arquitectura tecnológica'],['roadmap','📅','Ruta 90 días'],['reporte','📄','Reporte ejecutivo']]},
+ {sec:'',items:[['perfil','👤','Perfil de la empresa']]}
+];
+function renderNav(){
+  document.getElementById('sb-nav').innerHTML=NAV.map(group=>`
+    ${group.sec?`<div class="sb-section-label">${group.sec}</div>`:''}
+    ${group.items.map(([key,icon,label])=>`<div class="sb-item ${STATE.page===key?'active':''}" onclick="goPage('${key}')">
+      <span class="sb-item-icon">${icon}</span>${label}</div>`).join('')}
+  `).join('');
+}
+function goPage(key){STATE.page=key;renderNav();renderPage();window.scrollTo(0,0);}
+function root(){return document.getElementById('page-root');}
+
+function renderPage(){
+  const map={dashboard:pageDashboard,mapa:pageMapa,procesos:pageProcesos,diagnostico:pageDiagnostico,
+    flujo:pageFlujo,importar:pageImportar,mejoras:pageMejoras,
+    arquitectura:pageArquitectura,roadmap:pageRoadmap,reporte:pageReporte,perfil:pagePerfil};
+  (map[STATE.page]||pageDashboard)();
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   INICIALIZACIÓN
+   ═══════════════════════════════════════════════════════════════════════ */
+async function init(){
+  renderAuthForm();
+
+  if(!SUPABASE_CONFIGURED){
+    // Nota informativa solo para el equipo técnico (no es un error de la aplicación):
+    // significa que SUPABASE_URL/SUPABASE_ANON_KEY todavía tienen los valores de ejemplo.
+    safeLog('log',
+      'ℹ️ MOP-X 2.0 — Nota para el equipo técnico (no es un error): ' +
+      'este archivo index.html todavía no está conectado a un proyecto real de Supabase ' +
+      '(SUPABASE_URL y SUPABASE_ANON_KEY siguen con sus valores de ejemplo). ' +
+      'Esto es esperado hasta completar SUPABASE_SETUP.md. El usuario final solo ve la pantalla "Estamos preparando tu plataforma".'
+    );
+    showOnly('maintenance-screen');
+    return;
+  }
+
+  showOnly('loading-screen');
+  try{
+    const { data: { session }, error: sessionError } = await sb.auth.getSession();
+    if(sessionError) throw sessionError;
+    if(session){
+      STATE.session = session;
+      await afterAuth();
+    } else {
+      showOnly('auth-screen');
+    }
+
+    sb.auth.onAuthStateChange((event, session) => {
+      if(event==='SIGNED_OUT'){
+        STATE = { session:null, cid:null, data:null, page:'dashboard', activeProc:null, quizIdx:0, toolTab:'bpm', importQueue:[] };
+        showOnly('auth-screen');
+        switchAuthTab('login');
+      }
+    });
+  }catch(e){
+    safeLog('error', 'MOP-X 2.0 — Error al iniciar la sesión:', e);
+    showOnly('auth-screen');
+    toast('No se pudo conectar con el servidor. Intenta recargar la página.');
+  }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  init().catch(e=>{
+    safeLog('error', 'MOP-X 2.0 — Error crítico de inicialización:', e);
+    showOnly('auth-screen');
+    toast('Ocurrió un error al cargar la plataforma. Intenta recargar la página.');
+  });
+});
+</script>
+</body>
+</html>
